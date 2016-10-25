@@ -1,0 +1,34 @@
+{
+  "name": "programmis/socket-chat",
+  "description": "Simple socket chat",
+  "type": "extra",
+  "require": {
+    "react/socket": "^0.4.3",
+    "php": ">=7",
+    "psr/log": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8",
+    "codeception/specify": "*",
+    "codeception/verify": "*",
+    "codeception/codeception": "*",
+    "squizlabs/php_codesniffer": "^2.3",
+    "codeception/c3": "2.*"
+  },
+  "authors": [
+    {
+      "name": "Daniil Sazhin",
+      "email": "daniildr22@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "scripts": {
+    "post-install-cmd": "php init --env=Development --overwrite=n",
+    "post-update-cmd": "php develop_init.php"
+  },
+  "autoload": {
+    "psr-4": {
+      "programmis\\SocketChat\\": ""
+    }
+  }
+}

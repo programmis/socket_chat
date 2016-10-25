@@ -1,0 +1,6 @@
+/vendor/
+composer.lock
+test*.php
+www
+logs
+.idea
