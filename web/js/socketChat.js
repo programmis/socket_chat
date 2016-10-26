@@ -9,11 +9,8 @@ var socketChat = {
     room: '',
     hash: '',
 
-    user_typing_info_class: '',
     user_typing_timeout: 3000,
     message_area_id: '',
-    dialog_container_id: '',
-    users_container_id: '',
 
     MESSAGE_TYPE_TEXT: '',
     MESSAGE_TYPE_EVENT: '',
@@ -24,6 +21,7 @@ var socketChat = {
     SYSTEM_COMMAND_GET_USER_LIST: '',
     SYSTEM_TYPE_USER_LIST: '',
     SYSTEM_TYPE_USER_CONNECTED: '',
+    SYSTEM_TYPE_USER_DISCONNECTED: '',
 
     eventUserTypingTimers: [],
 
@@ -41,7 +39,7 @@ var socketChat = {
 
         socketChat.socket.onopen = function () {
             socketChat.is_connect = true;
-            socketChat.sendSystem(socketChat.SYSTEM_COMMAND_GET_USER_LIST);
+            socketChat.getUserList();
             console.log("Сonnected");
         };
 
@@ -67,7 +65,7 @@ var socketChat = {
                     socketChat.eventProcessing(data[socketChat.MESSAGE_CONTAINER]);
                     break;
                 case socketChat.MESSAGE_TYPE_SYSTEM:
-                    socketChat.systemProcessing(data[socketChat.MESSAGE_CONTAINER])
+                    socketChat.systemProcessing(data[socketChat.MESSAGE_CONTAINER]);
                     break;
             }
         };
@@ -83,28 +81,28 @@ var socketChat = {
                 );
             });
     },
-    addUser: function (user) {
-        $('#' + socketChat.users_container_id).append(
-            "<option value='" + user.id + "'>" + user.id + "</option>"
-        );
+    getUserList: function () {
+        socketChat.sendSystem(socketChat.SYSTEM_COMMAND_GET_USER_LIST);
     },
     systemProcessing: function (system) {
         switch (system.system) {
             case socketChat.SYSTEM_TYPE_USER_CONNECTED:
-                socketChat.addUser(system.user);
+            case socketChat.SYSTEM_TYPE_USER_DISCONNECTED:
+                socketChat.onUserRender(system.user);
                 break;
             case socketChat.SYSTEM_TYPE_USER_LIST:
+                socketChat.systemUserListProcessing(system.data);
                 break;
         }
     },
-    messageProcessing: function (message) {
-        socketChat.messageRender(message);
-        socketChat.eventUserTypingEnd(message.user.id);
+    systemUserListProcessing: function (user_list) {
+        $.each(user_list, function (key, user) {
+            socketChat.onUserRender(user);
+        });
     },
-    messageRender: function (message) {
-        $('#' + socketChat.dialog_container_id).prepend(
-            message.text + '<br>'
-        );
+    messageProcessing: function (message) {
+        socketChat.onMessageRender(message);
+        socketChat.onUserTypingEnd(message.user.id);
     },
     eventProcessing: function (event) {
         switch (event.event) {
@@ -118,42 +116,39 @@ var socketChat = {
             clearTimeout(socketChat.eventUserTypingTimers[event.user.id]);
         }
         socketChat.eventUserTypingTimers[event.user.id] = setTimeout(function () {
-            socketChat.eventUserTypingEnd(event.user.id);
+            socketChat.onUserTypingEnd(event.user.id);
         }, socketChat.user_typing_timeout);
-        socketChat.eventUserTypingStart(event.user.id);
-    },
-    eventUserTypingStart: function (user_id) {
-        $('.' + socketChat.user_typing_info_class + '[id="' + user_id + '"]').html('typing...');
-    },
-    eventUserTypingEnd: function (user_id) {
-        $('.' + socketChat.user_typing_info_class + '[id="' + user_id + '"]').html('');
+        socketChat.onUserTypingStart(event.user.id);
     },
     close: function () {
         socketChat.socket.close();
         socketChat.is_connect = false;
         console.log('Closing');
     },
-    send: function () {
+    send: function (recipient_id) {
         var msgArea = $('#' + socketChat.message_area_id);
         var message = msgArea.val();
         msgArea.val('');
         if (!message.trim().length) {
             return false;
         }
-        socketChat.sendMessage(message);
+        socketChat.sendMessage(message, recipient_id);
         return false;
     },
-    prepareMessage: function (type, message) {
+    prepareMessage: function (type, message, recipient_id) {
         var msg_arr = {
             type: type
         };
+        if (recipient_id) {
+            msg_arr.recipient_id = recipient_id;
+        }
         msg_arr[socketChat.MESSAGE_CONTAINER] = message;
 
         return JSON.stringify(msg_arr);
     },
-    sendMessage: function (message) {
+    sendMessage: function (message, recipient_id) {
         socketChat.socket.send(
-            socketChat.prepareMessage(socketChat.MESSAGE_TYPE_TEXT, message)
+            socketChat.prepareMessage(socketChat.MESSAGE_TYPE_TEXT, message, recipient_id)
         );
     },
     sendSystem: function (system, data) {

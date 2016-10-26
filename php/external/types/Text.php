@@ -8,6 +8,7 @@
 
 namespace php\external\types;
 
+use php\external\User;
 use php\interfaces\TextInterface;
 
 /**
@@ -17,15 +18,17 @@ use php\interfaces\TextInterface;
 class Text implements TextInterface
 {
     /** @inheritdoc */
-    public static function prepareToSend(int $user_id, $message)
+    public static function prepareToSend(User $sender, $message)
     {
-        return [
-            'user' => [
-                //TODO: GET FULL USER INFO
-                'id' => $user_id
-            ],
+        $data = [
             'text' => $message,
             'date' => date('Y-m-d H:i:s')
         ];
+        if ($sender) {
+            $data = array_merge($data, [
+                'user' => $sender->getInfo()
+            ]);
+        }
+        return $data;
     }
 }

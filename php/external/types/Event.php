@@ -8,6 +8,7 @@
 
 namespace php\external\types;
 
+use php\external\User;
 use php\interfaces\EventInterface;
 
 /**
@@ -17,13 +18,10 @@ use php\interfaces\EventInterface;
 class Event implements EventInterface
 {
     /** @inheritdoc */
-    public static function prepareToSend($event, int $user_id, $data)
+    public static function prepareToSend($event, User $sender, $data)
     {
         return [
-            'user' => [
-                //TODO: GET FULL USER INFO
-                'id' => $user_id
-            ],
+            'user' => $sender->getInfo(),
             'event' => $event,
             'data' => $data
         ];

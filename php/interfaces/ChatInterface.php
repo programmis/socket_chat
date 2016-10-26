@@ -23,6 +23,7 @@ interface ChatInterface
     const DEFAULT_ROOM = 'default';
 
     const DATA_TYPE_TEXT = 'text';
+    const DATA_TYPE_CLOSE = 'close';
 
     /**
      * @param Connection $conn

@@ -22,8 +22,19 @@ class User extends UserBase implements UserInterface
     {
         $user = new self();
         $user->id = $user_id;
+        $user->online();
 
         return $user;
+    }
+
+    public function online()
+    {
+        $this->is_online = true;
+    }
+
+    public function offline()
+    {
+        $this->is_online = false;
     }
 
     /** @inheritdoc */
@@ -42,6 +53,7 @@ class User extends UserBase implements UserInterface
     public function fillByInfo(array $connection_info)
     {
         $this->id = rand(1, 999);
+        $this->online();
 
         return true;
     }

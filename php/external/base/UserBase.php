@@ -23,5 +23,5 @@ abstract class UserBase
     /** @var string $last_name */
     public $last_name;
     /** @var bool $is_online */
-    public $is_online;
+    protected $is_online;
 }

@@ -18,18 +18,15 @@ use php\interfaces\SystemIterface;
 class System implements SystemIterface
 {
     /** @inheritdoc */
-    public static function prepareToSend($type, $data = [], int $user_id = null)
+    public static function prepareToSend($type, $data = [], User $user = null)
     {
         $message = [
             'system' => $type,
             'data' => $data
         ];
-        $user = User::findOne($user_id);
-        if (!$user) {
-            throw new \Exception("User #$user_id is not found");
-        }
         switch ($type) {
             case self::TYPE_USER_CONNECTED:
+            case self::TYPE_USER_DISCONNECTED:
                 $message = array_merge($message, [
                     'user' => $user->getInfo()
                 ]);

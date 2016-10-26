@@ -40,4 +40,14 @@ interface UserInterface
      * @return User
      */
     public static function findOne($user_id);
+
+    /**
+     * set is_online param to true
+     */
+    public function online();
+
+    /**
+     * set is_online param to false
+     */
+    public function offline();
 }

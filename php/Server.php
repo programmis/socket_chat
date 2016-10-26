@@ -11,7 +11,6 @@ namespace php;
 use php\interfaces\ChatInterface;
 use php\interfaces\ConfigInterface;
 use php\libs\Config;
-use php\libs\Logger;
 use php\libs\Security;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -112,8 +111,6 @@ class Server
             $info['user'] = $this->chat->createUser($conn, $info);
 
             $conn->on('data', function ($data) use ($info) {
-                $this->chat->cleanConnections($info);
-
                 $data = Security::decode($data);
 
                 self::log('data received: ' . print_r($data, true), LogLevel::DEBUG);
@@ -123,17 +120,19 @@ class Server
                     self::log(print_r($ex->getMessage()), LogLevel::CRITICAL);
                 }
             });
-            $conn->on('close', function ($data) use ($info) {
+            $conn->on('close', function () use ($info) {
                 $this->chat->cleanConnections($info);
 
                 self::log('Connection close');
             });
-            $conn->on('end', function ($data) {
+            $conn->on('end', function () {
                 self::log('Connection end');
             });
-            $conn->on('error', function ($data) {
+            $conn->on('error', function () {
                 self::log('Connection error');
             });
+
+            return true;
         });
         $this->socket->listen($this->port);
         self::$instance = $this;
@@ -162,6 +161,9 @@ class Server
      */
     public static function write($message, Connection $conn)
     {
+        if (!$conn->isWritable()) {
+            return;
+        }
         $conn->write(Security::encode($message));
         self::log('Send message: ' . $message);
     }
@@ -200,6 +202,7 @@ class Server
         $system_command_get_user_list = $system::COMMAND_GET_USER_LIST;
         $system_type_user_list = $system::TYPE_USER_LIST;
         $system_type_user_connected = $system::TYPE_USER_CONNECTED;
+        $system_type_user_disconnected = $system::TYPE_USER_DISCONNECTED;
 
         $js = <<<JS
                 socketChat.DEFAULT_ROOM = "$default_room";
@@ -211,6 +214,7 @@ class Server
                 socketChat.SYSTEM_COMMAND_GET_USER_LIST = "$system_command_get_user_list";
                 socketChat.SYSTEM_TYPE_USER_CONNECTED = "$system_type_user_connected";
                 socketChat.SYSTEM_TYPE_USER_LIST = "$system_type_user_list";
+                socketChat.SYSTEM_TYPE_USER_DISCONNECTED = "$system_type_user_disconnected";
 JS;
 
         return $js;

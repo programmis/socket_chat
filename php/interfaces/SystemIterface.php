@@ -8,12 +8,15 @@
 
 namespace php\interfaces;
 
+use php\external\User;
+
 /**
  * Interface SystemIterface
  * @package php\interfaces
  */
 interface SystemIterface
 {
+    const TYPE_USER_DISCONNECTED = 'user_disconnected';
     const TYPE_USER_CONNECTED = 'user_connected';
     const TYPE_USER_LIST = 'user_list';
 
@@ -25,5 +28,5 @@ interface SystemIterface
      *
      * @return string
      */
-    public static function prepareToSend($type, $data = [], int $user_id = null);
+    public static function prepareToSend($type, $data = [], User $user = null);
 }

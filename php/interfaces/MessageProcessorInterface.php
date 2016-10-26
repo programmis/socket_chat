@@ -8,6 +8,8 @@
 
 namespace php\interfaces;
 
+use php\external\User;
+
 /**
  * Interface MessageInterface
  *
@@ -26,18 +28,18 @@ interface MessageProcessorInterface
     /**
      * @param array $message
      * @param string $room
-     * @param int $from_user_id
+     * @param User $sender
      *
      * @return array ['system_type', [system data]]
      */
-    public function system($message, $room, $from_user_id);
+    public function system($message, $room, User $sender);
 
     /**
      * @param array $event
      * @param string $room
-     * @param int $from_user_id
+     * @param User $sender
      *
      * @return array ['event_type', [event data]]
      */
-    public function event($event, $room, $from_user_id);
+    public function event($event, $room, User $sender);
 }

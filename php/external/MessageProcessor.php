@@ -24,13 +24,13 @@ class MessageProcessor implements MessageProcessorInterface
     }
 
     /** @inheritdoc */
-    public function system($message, $room, $from_user_id)
+    public function system($message, $room, User $sender)
     {
         return [false, []];
     }
 
     /** @inheritdoc */
-    public function event($event, $room, $from_user_id)
+    public function event($event, $room, User $sender)
     {
         return [false, []];
     }

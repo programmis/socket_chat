@@ -8,6 +8,8 @@
 
 namespace php\interfaces;
 
+use php\external\User;
+
 /**
  * Interface TextInterface
  * @package php\interfaces
@@ -15,10 +17,10 @@ namespace php\interfaces;
 interface TextInterface
 {
     /**
-     * @param int $user_id
+     * @param User $sender
      * @param string $message
      *
      * @return array
      */
-    public static function prepareToSend(int $user_id, $message);
+    public static function prepareToSend(User $sender, $message);
 }
