@@ -148,6 +148,14 @@ class Server
     }
 
     /**
+     * Daemon tick
+     */
+    public function tick()
+    {
+        $this->loop->tick();
+    }
+
+    /**
      * Stop server
      */
     public function stop()
