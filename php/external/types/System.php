@@ -28,7 +28,7 @@ class System implements SystemIterface
             case self::TYPE_USER_CONNECTED:
             case self::TYPE_USER_DISCONNECTED:
                 $message = array_merge($message, [
-                    'user' => $user->getInfo()
+                    User::CONTAINER => $user->getInfo()
                 ]);
                 break;
         }

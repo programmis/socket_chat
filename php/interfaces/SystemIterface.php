@@ -19,8 +19,11 @@ interface SystemIterface
     const TYPE_USER_DISCONNECTED = 'user_disconnected';
     const TYPE_USER_CONNECTED = 'user_connected';
     const TYPE_USER_LIST = 'user_list';
+    const TYPE_USER_HISTORY = 'user_history';
+    const TYPE_USER_REMOVED = 'user_removed';
 
     const COMMAND_GET_USER_LIST = 'getUserList';
+    const COMMAND_GET_MESSAGE_HISTORY = 'getMessageHistory';
 
     /**
      * @param string $system

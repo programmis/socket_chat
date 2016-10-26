@@ -21,7 +21,7 @@ class Event implements EventInterface
     public static function prepareToSend($event, User $sender, $data)
     {
         return [
-            'user' => $sender->getInfo(),
+            User::CONTAINER => $sender->getInfo(),
             'event' => $event,
             'data' => $data
         ];

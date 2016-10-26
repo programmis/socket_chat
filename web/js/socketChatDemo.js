@@ -12,20 +12,43 @@ $(function () {
     $('#' + users_container_id).on('click', 'div', function () {
         $('#' + users_container_id).find('div').removeClass('active');
         $(this).addClass('active');
+        socketChat.getMessageHistory($(this).attr('id'));
     });
-
     socketChat.onMessageRender = function (message) {
         $('#' + dialog_container_id).prepend(
             message.text + '<br>'
         );
     };
+    socketChat.onMessageListRender = function (message_list) {
+        var message = {};
+        $('#' + dialog_container_id).html('');
+
+        $.each(message_list, function (key, val) {
+            message = {
+                text: val.text
+            };
+            socketChat.onMessageRender(message);
+        });
+    };
+    socketChat.onUserListRender = function (user_list) {
+        $.each(user_list, function (key, user) {
+            socketChat.onUserRender(user);
+        });
+    };
     socketChat.onUserRender = function (user) {
-        $('#' + users_container_id).append(
-            "<div class='"
+        var html = "<div class='"
             + (user.is_online ? "online" : "offline")
             + "' id='" + user.id + "'>" + user.id + " <span class='"
-            + user_typing_info_class + "' id='" + user.id + "'></span></div>"
-        );
+            + user_typing_info_class + "' id='" + user.id + "'></span></div>";
+
+        var userCon = $('#' + users_container_id);
+        var userDiv = userCon.find('div[id="' + user.id + '"]');
+        if (userDiv.length) {
+            userDiv.after(html);
+            userDiv.remove();
+        } else {
+            $(userCon).append(html);
+        }
     };
     socketChat.onUserTypingStart = function (user_id) {
         $('.' + user_typing_info_class + '[id="' + user_id + '"]').html('typing...');

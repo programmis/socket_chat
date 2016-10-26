@@ -10,9 +10,9 @@ use php\Server;
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="js/socketChat.js"></script>
     <script src="js/socketChatDemo.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/socketChatDemo.css">
     <title>Title</title>
 </head>

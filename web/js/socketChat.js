@@ -11,17 +11,22 @@ var socketChat = {
 
     user_typing_timeout: 3000,
     message_area_id: '',
+    message_history_period: 7,
 
     MESSAGE_TYPE_TEXT: '',
     MESSAGE_TYPE_EVENT: '',
     MESSAGE_TYPE_SYSTEM: '',
     MESSAGE_CONTAINER: '',
+    USER_CONTAINER: '',
     DEFAULT_ROOM: '',
     EVENT_TYPING: '',
     SYSTEM_COMMAND_GET_USER_LIST: '',
+    SYSTEM_COMMAND_GET_MESSAGE_HISTORY: '',
     SYSTEM_TYPE_USER_LIST: '',
     SYSTEM_TYPE_USER_CONNECTED: '',
     SYSTEM_TYPE_USER_DISCONNECTED: '',
+    SYSTEM_TYPE_USER_REMOVED: '',
+    SYSTEM_TYPE_USER_HISTORY: '',
 
     eventUserTypingTimers: [],
 
@@ -81,8 +86,29 @@ var socketChat = {
                 );
             });
     },
+    onUserRender: function (user) {
+    },
+    onUserListRender: function (user_list) {
+    },
+    onMessageRender: function (message) {
+    },
+    onMessageListRender: function (message_list) {
+    },
+    onUserTypingStart: function (user_id) {
+    },
+    onUserTypingEnd: function (user_id) {
+    },
     getUserList: function () {
         socketChat.sendSystem(socketChat.SYSTEM_COMMAND_GET_USER_LIST);
+    },
+    getMessageHistory: function (with_user_id, period) {
+        socketChat.sendSystem(
+            socketChat.SYSTEM_COMMAND_GET_MESSAGE_HISTORY,
+            {
+                with_user_id: with_user_id,
+                period: period ? period : socketChat.message_history_period
+            }
+        );
     },
     systemProcessing: function (system) {
         switch (system.system) {
@@ -91,14 +117,12 @@ var socketChat = {
                 socketChat.onUserRender(system.user);
                 break;
             case socketChat.SYSTEM_TYPE_USER_LIST:
-                socketChat.systemUserListProcessing(system.data);
+                socketChat.onUserListRender(system.data);
+                break;
+            case socketChat.SYSTEM_TYPE_USER_HISTORY:
+                socketChat.onMessageListRender(system.data);
                 break;
         }
-    },
-    systemUserListProcessing: function (user_list) {
-        $.each(user_list, function (key, user) {
-            socketChat.onUserRender(user);
-        });
     },
     messageProcessing: function (message) {
         socketChat.onMessageRender(message);
@@ -156,6 +180,7 @@ var socketChat = {
             system: system,
             data: data
         };
+
         socketChat.socket.send(
             socketChat.prepareMessage(socketChat.MESSAGE_TYPE_SYSTEM, system_data)
         );

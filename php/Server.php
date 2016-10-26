@@ -8,6 +8,7 @@
 
 namespace php;
 
+use php\external\User;
 use php\interfaces\ChatInterface;
 use php\interfaces\ConfigInterface;
 use php\libs\Config;
@@ -108,7 +109,7 @@ class Server
             }
             self::log(print_r($info, true), LogLevel::DEBUG);
 
-            $info['user'] = $this->chat->createUser($conn, $info);
+            $info[User::CONTAINER] = $this->chat->createUser($conn, $info);
 
             $conn->on('data', function ($data) use ($info) {
                 $data = Security::decode($data);
@@ -192,6 +193,7 @@ class Server
         $chat = $config::getChatClass();
         $system = $config::getSystemClass();
         $event = $config::getEventClass();
+        $user = $config::getUserClass();
 
         $default_room = $chat::DEFAULT_ROOM;
         $event_typing = $event::TYPING;
@@ -199,10 +201,14 @@ class Server
         $message_type_system = $message::TYPE_SYSTEM;
         $message_type_text = $message::TYPE_TEXT;
         $message_container = $message::CONTAINER;
+        $user_container = $user::CONTAINER;
         $system_command_get_user_list = $system::COMMAND_GET_USER_LIST;
+        $system_command_get_message_history = $system::COMMAND_GET_MESSAGE_HISTORY;
         $system_type_user_list = $system::TYPE_USER_LIST;
         $system_type_user_connected = $system::TYPE_USER_CONNECTED;
         $system_type_user_disconnected = $system::TYPE_USER_DISCONNECTED;
+        $system_type_user_removed = $system::TYPE_USER_REMOVED;
+        $system_type_user_history = $system::TYPE_USER_HISTORY;
 
         $js = <<<JS
                 socketChat.DEFAULT_ROOM = "$default_room";
@@ -211,10 +217,14 @@ class Server
                 socketChat.MESSAGE_TYPE_SYSTEM = "$message_type_system";
                 socketChat.MESSAGE_TYPE_TEXT = "$message_type_text";
                 socketChat.MESSAGE_CONTAINER = "$message_container";
+                socketChat.USER_CONTAINER = "$user_container";
                 socketChat.SYSTEM_COMMAND_GET_USER_LIST = "$system_command_get_user_list";
+                socketChat.SYSTEM_COMMAND_GET_MESSAGE_HISTORY = "$system_command_get_message_history";
                 socketChat.SYSTEM_TYPE_USER_CONNECTED = "$system_type_user_connected";
                 socketChat.SYSTEM_TYPE_USER_LIST = "$system_type_user_list";
                 socketChat.SYSTEM_TYPE_USER_DISCONNECTED = "$system_type_user_disconnected";
+                socketChat.SYSTEM_TYPE_USER_REMOVED = "$system_type_user_removed";
+                socketChat.SYSTEM_TYPE_USER_HISTORY = "$system_type_user_history";
 JS;
 
         return $js;

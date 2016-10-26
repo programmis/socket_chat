@@ -17,21 +17,36 @@ use php\interfaces\UserInterface;
  */
 class User extends UserBase implements UserInterface
 {
+    /** @var User[] $list */
+    private static $list = [];
+
+    /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        self::$list[] = $this;
+    }
+
     /** @inheritdoc */
     public static function findOne($user_id)
     {
-        $user = new self();
-        $user->id = $user_id;
-        $user->online();
+        foreach (self::$list as $user) {
+            if ($user->id == $user_id) {
+                return $user;
+            }
+        }
 
-        return $user;
+        return false;
     }
 
+    /** @inheritdoc */
     public function online()
     {
         $this->is_online = true;
     }
 
+    /** @inheritdoc */
     public function offline()
     {
         $this->is_online = false;

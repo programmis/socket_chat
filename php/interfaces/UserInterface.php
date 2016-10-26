@@ -16,6 +16,8 @@ use php\external\User;
  */
 interface UserInterface
 {
+    const CONTAINER = 'user';
+
     /**
      * @return array [
      *      id => 1,

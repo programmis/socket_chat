@@ -26,7 +26,7 @@ class Text implements TextInterface
         ];
         if ($sender) {
             $data = array_merge($data, [
-                'user' => $sender->getInfo()
+                User::CONTAINER => $sender->getInfo()
             ]);
         }
         return $data;

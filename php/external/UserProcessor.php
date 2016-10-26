@@ -10,6 +10,7 @@ namespace php\external;
 
 use php\interfaces\UserInterface;
 use php\interfaces\UserProcessorInterface;
+use php\Server;
 
 /**
  * Class User
@@ -21,7 +22,10 @@ class UserProcessor implements UserProcessorInterface
     /** @inheritdoc */
     public function createUser(array $connection_info)
     {
-        $user = self::getUserClass();
+        $config = Server::$config;
+
+        $user = $config::getUserClass();
+
         /** @var User $user */
         $user = new $user;
         if (!($user instanceof UserInterface)) {
@@ -30,13 +34,5 @@ class UserProcessor implements UserProcessorInterface
         $user->fillByInfo($connection_info);
 
         return $user;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getUserClass()
-    {
-        return User::class;
     }
 }

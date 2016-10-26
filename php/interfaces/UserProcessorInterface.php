@@ -26,9 +26,4 @@ interface UserProcessorInterface
      * @return User
      */
     public function createUser(array $connection_info);
-
-    /**
-     * @return string
-     */
-    public static function getUserClass();
 }
