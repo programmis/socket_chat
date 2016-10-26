@@ -18,9 +18,23 @@ use Psr\Log\LoggerInterface;
  */
 abstract class ConfigBase implements ConfigInterface
 {
-    /**
-     * @return LoggerInterface
-     */
+    /** @inheritdoc */
+    public static function getMessageProcessorClass()
+    {
+        $config = self::class;
+
+        return $config::MESSAGE_PROCESSOR_CLASS;
+    }
+
+    /** @inheritdoc */
+    public static function getUserProcessorClass()
+    {
+        $config = self::class;
+
+        return $config::USER_PROCESSOR_CLASS;
+    }
+
+    /** @inheritdoc */
     public static function getLoggerClass()
     {
         $config = self::class;
@@ -28,9 +42,7 @@ abstract class ConfigBase implements ConfigInterface
         return $config::LOGGER_CLASS;
     }
 
-    /**
-     * @return ChatInterface
-     */
+    /** @inheritdoc */
     public static function getChatClass()
     {
         $config = self::class;

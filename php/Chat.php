@@ -27,7 +27,7 @@ use React\Socket\Connection;
  */
 class Chat implements ChatInterface
 {
-    /** @var  Chat $instance */
+    /** @var Chat $instance */
     private static $instance;
     /** @var bool $is_create */
     private static $is_create = false;
@@ -43,24 +43,6 @@ class Chat implements ChatInterface
     /** @var UserProcessor $userProcessor */
     public $userProcessor = null;
 
-
-    /**
-     * @return string
-     */
-    public static function getMessageProcessorClass()
-    {
-        return MessageProcessor::class;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getUserProcessorClass()
-    {
-        return UserProcessor::class;
-    }
-
-
     /**
      * Chat constructor.
      *
@@ -71,14 +53,15 @@ class Chat implements ChatInterface
         if (!self::$is_create) {
             throw new \Exception('Cannot create new object. Please use getInstance method');
         }
-        $messageProcessor = self::getMessageProcessorClass();
+        $config = Server::$config;
+        $messageProcessor = $config::getMessageProcessorClass();
         $messageProcessor = new $messageProcessor;
         if (!($messageProcessor instanceof MessageProcessorInterface)) {
             throw new \Exception('MessageProcessor class must implement MessageProcessorInterface');
         }
         $this->messageProcessor = $messageProcessor;
 
-        $userProcessor = self::getUserProcessorClass();
+        $userProcessor = $config::getUserProcessorClass();
         $userProcessor = new $userProcessor;
         if (!($userProcessor instanceof UserProcessorInterface)) {
             throw new \Exception('UserProcessor class must implement UserProcessorInterface');

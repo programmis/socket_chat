@@ -10,9 +10,11 @@ namespace php\interfaces;
 
 use php\Chat;
 use php\external\Message;
+use php\external\MessageProcessor;
 use php\external\types\Event;
 use php\external\types\System;
 use php\external\User;
+use php\external\UserProcessor;
 use php\libs\Logger;
 use Psr\Log\LoggerInterface;
 
@@ -28,6 +30,14 @@ interface ConfigInterface
     const LOGGER_CLASS = Logger::class;
     const SYSTEM_CLASS = System::class;
     const EVENT_CLASS = Event::class;
+    const MESSAGE_PROCESSOR_CLASS = MessageProcessor::class;
+    const USER_PROCESSOR_CLASS = UserProcessor::class;
+
+    /** @return UserProcessorInterface */
+    public static function getUserProcessorClass();
+
+    /** @return MessageProcessorInterface */
+    public static function getMessageProcessorClass();
 
     /** @return ChatInterface */
     public static function getChatClass();
