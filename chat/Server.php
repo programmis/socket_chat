@@ -32,16 +32,18 @@ class Server
     private static $logger;
     /** @var ConfigInterface $config */
     private static $config;
+    /** @var int $port */
+    public static $port = 1337;
+    /** @var string $listen_host */
+    public static $listen_host = '0.0.0.0';
+    /** @var string $server_host */
+    public static $server_host = '127.0.0.1';
 
     /** @var StreamSelectLoop */
     protected $loop;
     /** @var \React\Socket\Server */
     protected $socket;
 
-    /** @var int $port */
-    public $port = 1337;
-    /** @var string $listen_host */
-    public $listen_host = '0.0.0.0';
     /** @var ChatInterface $chat */
     public $chat;
 
@@ -135,7 +137,7 @@ class Server
 
             return true;
         });
-        $this->socket->listen($this->port);
+        $this->socket->listen(self::$port, self::$listen_host);
         self::$instance = $this;
     }
 
