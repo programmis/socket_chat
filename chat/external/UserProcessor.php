@@ -22,7 +22,7 @@ class UserProcessor implements UserProcessorInterface
     /** @inheritdoc */
     public function createUser(array $connection_info)
     {
-        $config = Server::$config;
+        $config = Server::getConfigClass();
 
         $user = $config::getUserClass();
 

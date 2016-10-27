@@ -53,7 +53,7 @@ class Chat implements ChatInterface
         if (!self::$is_create) {
             throw new \Exception('Cannot create new object. Please use getInstance method');
         }
-        $config = Server::$config;
+        $config = Server::getConfigClass();
         $messageProcessor = $config::getMessageProcessorClass();
         $messageProcessor = new $messageProcessor;
         if (!($messageProcessor instanceof MessageProcessorInterface)) {
@@ -214,7 +214,7 @@ class Chat implements ChatInterface
     protected function sendMessageToRoomUsers($message_array, string $room, User $user = null, $exclude = false)
     {
         $message_json = json_encode($message_array);
-        $config = Server::$config;
+        $config = Server::getConfigClass();
         $message = $config::getMessageClass();
 
         if ($user && !$exclude) {

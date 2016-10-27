@@ -29,9 +29,9 @@ class Server
     /** @var Server $instance */
     private static $instance;
     /** @var LoggerInterface $logger */
-    public static $logger;
+    private static $logger;
     /** @var ConfigInterface $config */
-    public static $config;
+    private static $config;
 
     /** @var StreamSelectLoop */
     protected $loop;
