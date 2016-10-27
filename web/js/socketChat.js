@@ -29,11 +29,21 @@ var socketChat = {
     SYSTEM_TYPE_USER_HISTORY: '',
 
     eventUserTypingTimers: [],
+    waitingRoomTimer: null,
 
     open: function () {
         if (socketChat.is_connect) {
             console.log("Is connected");
             return false;
+        }
+        if (!socketChat.room) {
+            if (socketChat.waitingRoomTimer) {
+                clearTimeout(socketChat.waitingRoomTimer);
+            }
+            socketChat.waitingRoomTimer = setTimeout(function () {
+                socketChat.open();
+            }, 500);
+            return;
         }
         var room = socketChat.room ? socketChat.room : socketChat.DEFAULT_ROOM;
 
