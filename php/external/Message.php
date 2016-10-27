@@ -32,4 +32,16 @@ class Message extends MessageBase implements MessageInterface
     {
         return self::$list;
     }
+
+    /** @inheritdoc */
+    public static function addMessage($sender_id, $recipient_id, $text, $params)
+    {
+        $message = new Message();
+        $message->text = $text;
+        $message->sender_id = $sender_id;
+        $message->recipient_id = $recipient_id;
+        $message->date = date('Y/m/d H:i:s');
+
+        return $message->save();
+    }
 }

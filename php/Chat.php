@@ -214,14 +214,16 @@ class Chat implements ChatInterface
     protected function sendMessageToRoomUsers($message_array, string $room, User $user = null, $exclude = false)
     {
         $message_json = json_encode($message_array);
+        $config = Server::$config;
+        $message = $config::getMessageClass();
 
         if ($user && !$exclude) {
             if ($message_array['type'] == Message::TYPE_TEXT) {
-                $this->saveMessage(
-                    $message_array[Message::CONTAINER][Message::TYPE_TEXT],
+                $message::addMessage(
                     $message_array[Message::CONTAINER][User::CONTAINER]['id'],
                     $user->id,
-                    $message_array[Message::CONTAINER]['date']
+                    $message_array[Message::CONTAINER][Message::TYPE_TEXT],
+                    []
                 );
             }
             Server::write($message_json, $this->getUserConnection($room, $user->id));
@@ -231,38 +233,16 @@ class Chat implements ChatInterface
                     continue;
                 }
                 if ($message_array['type'] == Message::TYPE_TEXT) {
-                    $this->saveMessage(
-                        $message_array[Message::CONTAINER][Message::TYPE_TEXT],
+                    $message::addMessage(
                         $message_array[Message::CONTAINER][User::CONTAINER]['id'],
                         $key,
-                        $message_array[Message::CONTAINER]['date']
+                        $message_array[Message::CONTAINER][Message::TYPE_TEXT],
+                        []
                     );
                 }
                 Server::write($message_json, $this->getUserConnection($room, $key));
             }
         }
-    }
-
-    /**
-     * @param string $text
-     * @param int $sender_id
-     * @param int $recipient_id
-     * @param $date
-     *
-     * @return bool
-     */
-    public function saveMessage($text, $sender_id, $recipient_id, $date)
-    {
-        $sender = User::findOne($sender_id);
-        $recipient = User::findOne($recipient_id);
-
-        $message = new Message();
-        $message->text = $text;
-        $message->sender = $sender;
-        $message->recipient = $recipient;
-        $message->date = $date;
-
-        return $message->save();
     }
 
     /**

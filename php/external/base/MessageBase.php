@@ -8,18 +8,16 @@
 
 namespace php\external\base;
 
-use php\external\User;
-
 /**
  * Class MessageBase
  * @package php\external\base
  */
 abstract class MessageBase
 {
-    /** @var User $sender */
-    public $sender;
-    /** @var User $recipient */
-    public $recipient;
+    /** @var int $sender_id */
+    public $sender_id;
+    /** @var int $recipient_id */
+    public $recipient_id;
     /** @var string $text */
     public $text;
     public $date;
