@@ -12,7 +12,7 @@ php -r "unlink('composer-setup.php');"
 _2) Install:_
 
 <pre>
-php composer.phar require programmis/socket_chat
+php composer.phar require programmis/socket-chat
 </pre>
 
 **Starting chat server**
