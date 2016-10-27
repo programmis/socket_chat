@@ -56,7 +56,7 @@ class Server
 
     private function initConfig()
     {
-        $config = self::getConfigClass();
+        $config = static::getConfigClass();
         $config = new $config;
         if (!($config instanceof ConfigInterface)) {
             throw new \Exception('Config class must implement ConfigInterface');
