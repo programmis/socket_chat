@@ -84,7 +84,7 @@ class Server
 
         /** @var Chat $chat */
         $chat = $config::getChatClass();
-        $chat = $chat::getInstance();
+        $chat = new $chat($this);
         if (!($chat instanceof ChatInterface)) {
             throw new \Exception('Chat class must implement ChatInterface');
         }

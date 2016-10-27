@@ -27,8 +27,6 @@ use React\Socket\Connection;
  */
 class Chat implements ChatInterface
 {
-    /** @var Chat $instance */
-    private static $instance;
     /** @var bool $is_create */
     private static $is_create = false;
 
@@ -43,17 +41,19 @@ class Chat implements ChatInterface
     /** @var UserProcessor $userProcessor */
     public $userProcessor = null;
 
+    /** @var Server $server */
+    public $server;
+
     /**
      * Chat constructor.
      *
      * @throws \Exception
      */
-    public function __construct()
+    public function __construct(Server $server)
     {
-        if (!self::$is_create) {
-            throw new \Exception('Cannot create new object. Please use getInstance method');
-        }
-        $config = Server::getConfigClass();
+        $this->server = $server;
+
+        $config = $server::getConfigClass();
         $messageProcessor = $config::getMessageProcessorClass();
         $messageProcessor = new $messageProcessor;
         if (!($messageProcessor instanceof MessageProcessorInterface)) {
@@ -69,19 +69,6 @@ class Chat implements ChatInterface
         $this->userProcessor = $userProcessor;
 
         self::$is_create = false;
-    }
-
-    /**
-     * @return Chat
-     */
-    public static function getInstance()
-    {
-        self::$is_create = true;
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
     }
 
     /** @inheritdoc */
@@ -213,8 +200,9 @@ class Chat implements ChatInterface
      */
     protected function sendMessageToRoomUsers($message_array, string $room, User $user = null, $exclude = false)
     {
+        $server = $this->server;
         $message_json = json_encode($message_array);
-        $config = Server::getConfigClass();
+        $config = $server::getConfigClass();
         $message = $config::getMessageClass();
 
         if ($user && !$exclude) {
@@ -226,7 +214,7 @@ class Chat implements ChatInterface
                     []
                 );
             }
-            Server::write($message_json, $this->getUserConnection($room, $user->id));
+            $server::write($message_json, $this->getUserConnection($room, $user->id));
         } else {
             foreach ($this->roomUsers[$room] as $key => $roomUser) {
                 if ($user && $exclude && $key == $user->id) {
@@ -240,7 +228,7 @@ class Chat implements ChatInterface
                         []
                     );
                 }
-                Server::write($message_json, $this->getUserConnection($room, $key));
+                $server::write($message_json, $this->getUserConnection($room, $key));
             }
         }
     }
