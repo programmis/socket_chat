@@ -45,9 +45,9 @@ class Security
                 $info[$matches[1]] = $matches[2];
             } else {
                 preg_match('|GET \/(.*)\/(.*) HTTP.+$|', $line, $matches);
-                $matches[1] = trim($matches[1] ?? '');
-                $room = preg_replace("/[^a-zA-Z0-9]/", "", $matches[1]);
-                $room = trim($room) ? trim($room) : Chat::DEFAULT_ROOM;
+
+                $room = preg_replace("/[^a-zA-Z0-9]/", "", $matches[1] ?? '');
+                $room = $room ? $room : Chat::DEFAULT_ROOM;
                 $info['room'] = strtolower($room);
 
                 $hash = preg_replace("/[^a-zA-Z0-9]/", "", $matches[2] ?? '');
