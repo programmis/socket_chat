@@ -1,11 +1,3 @@
-#dialog_container {
-    float: right;
-    margin-right: 40px;
-    max-width: 55%;
-    border: 1px solid black;
-    width: 55%;
-    padding-bottom: 10%;
-}
 #users_container {
     cursor: pointer;
 }
