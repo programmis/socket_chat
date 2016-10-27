@@ -95,6 +95,9 @@ var socketChat = {
     onUserRender: function (user) {
     },
     onUserListRender: function (user_list) {
+        $.each(user_list, function (key, user) {
+            socketChat.onUserRender(user);
+        });
     },
     onMessageRender: function (message) {
     },

@@ -30,11 +30,6 @@ $(function () {
             socketChat.onMessageRender(message);
         });
     };
-    socketChat.onUserListRender = function (user_list) {
-        $.each(user_list, function (key, user) {
-            socketChat.onUserRender(user);
-        });
-    };
     socketChat.onUserRender = function (user) {
         var html = "<div class='"
             + (user.is_online ? "online" : "offline")
