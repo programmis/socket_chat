@@ -42,7 +42,6 @@ _Init java constants_
 
 _Settings_
 <pre>
-socketChat.message_area_id = "You're textarea id for messages";
 socketChat.socket_url = "You're server address : and port";
 socketChat.room = "Chat room name";
 socketChat.hash = "You're secret hash for processing with UserProcessor";
@@ -54,7 +53,8 @@ _Functions_
 <pre>
 socketChat.open(); - open connect with server
 socketChat.close(); - close connect with server
-socketChat.send(user_id); - send message to user, if user_id is undefined then send message to all users in current room 
+socketChat.setMessageAreaId(id); - set textarea id for messages
+socketChat.send(user_id); - send message from message_area to user, if user_id is undefined then send message to all users in current room 
 socketChat.getUserList(); - get all users in current room
 socketChat.getMessageHistory(with_user_id, period); - get all messages for current user and with_user_id by period
 </pre>

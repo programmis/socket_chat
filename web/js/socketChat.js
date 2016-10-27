@@ -76,6 +76,9 @@ var socketChat = {
                     break;
             }
         };
+    },
+    setMessageAreaId: function (id) {
+        socketChat.message_area_id = id;
 
         $('body')
             .off('keyup', '#' + socketChat.message_area_id)
