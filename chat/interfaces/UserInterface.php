@@ -30,13 +30,6 @@ interface UserInterface
     public function getInfo();
 
     /**
-     * @param array $connection_info
-     *
-     * @return bool
-     */
-    public function fillByInfo(array $connection_info);
-
-    /**
      * @param int $user_id
      *
      * @return User

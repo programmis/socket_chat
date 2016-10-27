@@ -31,7 +31,8 @@ class UserProcessor implements UserProcessorInterface
         if (!($user instanceof UserInterface)) {
             throw new \Exception('User class must implement UserInterface');
         }
-        $user->fillByInfo($connection_info);
+        $user->id = rand(1, 999);
+        $user->online();
 
         return $user;
     }

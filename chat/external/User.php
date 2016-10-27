@@ -63,13 +63,4 @@ class User extends UserBase implements UserInterface
             'is_online' => $this->is_online
         ];
     }
-
-    /** @inheritdoc */
-    public function fillByInfo(array $connection_info)
-    {
-        $this->id = rand(1, 999);
-        $this->online();
-
-        return true;
-    }
 }
