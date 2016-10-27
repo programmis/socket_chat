@@ -12,6 +12,8 @@ var socketChat = {
     user_typing_timeout: 3000,
     message_area_id: '',
     message_history_period: 7,
+    recipient_id: 0,
+    send_on_enter: false,
 
     MESSAGE_TYPE_TEXT: '',
     MESSAGE_TYPE_EVENT: '',
@@ -93,12 +95,16 @@ var socketChat = {
         $('body')
             .off('keyup', '#' + socketChat.message_area_id)
             .on('keyup', '#' + socketChat.message_area_id, function (event) {
-                socketChat.sendEvent(
-                    socketChat.EVENT_TYPING,
-                    {
-                        symbol: event.keyCode
-                    }
-                );
+                if (event.keyCode == 13 && event.ctrlKey == !socketChat.send_on_enter) {
+                    socketChat.send();
+                } else {
+                    socketChat.sendEvent(
+                        socketChat.EVENT_TYPING,
+                        {
+                            symbol: event.keyCode
+                        }
+                    );
+                }
             });
     },
     onConnect: function () {

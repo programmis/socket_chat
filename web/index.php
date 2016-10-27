@@ -34,7 +34,7 @@ use chat\Server;
             <textarea id="socketChat"></textarea>
         </div>
         <div>
-            <button class="btn btn-info" onclick="sendMessage();">send message</button>
+            <button class="btn btn-info" onclick="socketChat.send();">send message</button>
         </div>
     </div>
     <div class="well col-xs-6" id="dialog_container"></div>

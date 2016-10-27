@@ -43,6 +43,8 @@ _Init java constants_
 _Settings_
 <pre>
 socketChat.socket_url = "You're server address : and port";
+socketChat.send_on_enter = "If this true, then all messages sending by press on enter key, ctrl+enter default"
+socketChat.recipient_id = 'Message recipient id, you can fill it before send messages';
 socketChat.room = "Chat room name";
 socketChat.hash = "You're secret hash for processing with UserProcessor";
 socketChat.user_typing_timeout = "For auto disable user typing status";
@@ -54,7 +56,7 @@ _Functions_
 socketChat.open(); - open connect with server
 socketChat.close(); - close connect with server
 socketChat.setMessageAreaId(id); - set textarea id for messages
-socketChat.send(user_id); - send message from message_area to user, if user_id is undefined then send message to all users in current room 
+socketChat.send(); - send message from message_area to socketChat.recipient_id 
 socketChat.getUserList(); - get all users in current room
 socketChat.getMessageHistory(with_user_id, period); - get all messages for current user and with_user_id by period
 </pre>

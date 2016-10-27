@@ -13,6 +13,7 @@ $(function () {
         $('#' + users_container_id).find('div').removeClass('active');
         $(this).addClass('active');
         socketChat.getMessageHistory($(this).attr('id'));
+        socketChat.recipient_id = $(this).attr('id');
     });
     socketChat.onMessageRender = function (message) {
         $('#' + dialog_container_id).prepend(
@@ -52,6 +53,3 @@ $(function () {
         $('.' + user_typing_info_class + '[id="' + user_id + '"]').html('');
     };
 });
-function sendMessage() {
-    socketChat.send($('#' + users_container_id).find('.active').attr('id'));
-}
