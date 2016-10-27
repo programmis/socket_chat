@@ -21,7 +21,7 @@
       "email": "daniildr22@gmail.com"
     }
   ],
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "scripts": {
     "post-install-cmd": "php init --env=Development --overwrite=n",
     "post-update-cmd": "php develop_init.php"
