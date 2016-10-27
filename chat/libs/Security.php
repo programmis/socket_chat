@@ -49,9 +49,7 @@ class Security
                 $room = preg_replace("/[^a-zA-Z0-9]/", "", $matches[1] ?? '');
                 $room = $room ? $room : Chat::DEFAULT_ROOM;
                 $info['room'] = strtolower($room);
-
-                $hash = preg_replace("/[^a-zA-Z0-9]/", "", $matches[2] ?? '');
-                $info['hash'] = trim($hash);
+                $info['hash'] = preg_replace("/[^a-zA-Z0-9]/", "", $matches[2] ?? '');
             }
         }
         if (empty($info['Sec-WebSocket-Key'])) {
