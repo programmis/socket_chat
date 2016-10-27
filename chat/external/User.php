@@ -6,14 +6,14 @@
  * Time: 15:19
  */
 
-namespace php\external;
+namespace chat\external;
 
-use php\external\base\UserBase;
-use php\interfaces\UserInterface;
+use chat\external\base\UserBase;
+use chat\interfaces\UserInterface;
 
 /**
  * Class User
- * @package php\external
+ * @package chat\external
  */
 class User extends UserBase implements UserInterface
 {

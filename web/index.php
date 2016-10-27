@@ -1,9 +1,9 @@
 <?php
 
 $loader = require __DIR__ . '/../vendor/autoload.php';
-$loader->add('php', __DIR__ . '/../');
+$loader->add('chat', __DIR__ . '/../');
 
-use php\Server;
+use chat\Server;
 
 ?>
 <!DOCTYPE html>

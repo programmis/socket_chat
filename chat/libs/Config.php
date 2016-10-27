@@ -6,13 +6,13 @@
  * Time: 16:50
  */
 
-namespace php\libs;
+namespace chat\libs;
 
-use php\libs\base\ConfigBase;
+use chat\libs\base\ConfigBase;
 
 /**
  * Class Config
- * @package php\libs
+ * @package chat\libs
  */
 class Config extends ConfigBase
 {

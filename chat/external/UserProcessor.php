@@ -6,16 +6,16 @@
  * Time: 12:01
  */
 
-namespace php\external;
+namespace chat\external;
 
-use php\interfaces\UserInterface;
-use php\interfaces\UserProcessorInterface;
-use php\Server;
+use chat\interfaces\UserInterface;
+use chat\interfaces\UserProcessorInterface;
+use chat\Server;
 
 /**
  * Class User
  *
- * @package php
+ * @package chat
  */
 class UserProcessor implements UserProcessorInterface
 {

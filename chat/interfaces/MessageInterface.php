@@ -6,13 +6,13 @@
  * Time: 16:47
  */
 
-namespace php\interfaces;
+namespace chat\interfaces;
 
-use php\external\Message;
+use chat\external\Message;
 
 /**
  * Interface MessageInterface
- * @package php\interfaces
+ * @package chat\interfaces
  */
 interface MessageInterface
 {

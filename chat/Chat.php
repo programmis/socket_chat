@@ -6,24 +6,24 @@
  * Time: 11:23
  */
 
-namespace php;
+namespace chat;
 
-use php\external\Message;
-use php\external\MessageProcessor;
-use php\external\types\Event;
-use php\external\types\System;
-use php\external\types\Text;
-use php\external\User;
-use php\external\UserProcessor;
-use php\interfaces\ChatInterface;
-use php\interfaces\MessageProcessorInterface;
-use php\interfaces\UserProcessorInterface;
+use chat\external\Message;
+use chat\external\MessageProcessor;
+use chat\external\types\Event;
+use chat\external\types\System;
+use chat\external\types\Text;
+use chat\external\User;
+use chat\external\UserProcessor;
+use chat\interfaces\ChatInterface;
+use chat\interfaces\MessageProcessorInterface;
+use chat\interfaces\UserProcessorInterface;
 use React\Socket\Connection;
 
 /**
  * Class Chat
  *
- * @package php
+ * @package chat
  */
 class Chat implements ChatInterface
 {

@@ -6,15 +6,15 @@
  * Time: 10:06
  */
 
-namespace php\libs;
+namespace chat\libs;
 
-use php\Chat;
+use chat\Chat;
 use React\Socket\Connection;
 
 /**
  * Class Security
  *
- * @package php\libs
+ * @package chat\libs
  */
 class Security
 {
@@ -128,9 +128,10 @@ class Security
         foreach (array_keys($frameHead) as $i) {
             $frameHead[$i] = chr($frameHead[$i]);
         }
+        $mask = array();
+
         if ($masked === true) {
             // generate a random mask:
-            $mask = array();
             for ($i = 0; $i < 4; $i++) {
                 $mask[$i] = chr(rand(0, 255));
             }

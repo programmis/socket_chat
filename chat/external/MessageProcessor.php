@@ -6,14 +6,14 @@
  * Time: 13:01
  */
 
-namespace php\external;
+namespace chat\external;
 
-use php\interfaces\MessageProcessorInterface;
+use chat\interfaces\MessageProcessorInterface;
 
 /**
  * Class Message
  *
- * @package php
+ * @package chat
  */
 class MessageProcessor implements MessageProcessorInterface
 {

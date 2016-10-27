@@ -6,14 +6,14 @@
  * Time: 15:55
  */
 
-namespace php\interfaces;
+namespace chat\interfaces;
 
-use php\external\User;
+use chat\external\User;
 use React\Socket\Connection;
 
 /**
  * Interface ChatInterface
- * @package php\interfaces
+ * @package chat\interfaces
  */
 interface ChatInterface
 {

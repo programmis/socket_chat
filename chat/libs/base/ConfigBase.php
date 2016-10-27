@@ -6,15 +6,13 @@
  * Time: 18:01
  */
 
-namespace php\libs\base;
+namespace chat\libs\base;
 
-use php\interfaces\ChatInterface;
-use php\interfaces\ConfigInterface;
-use Psr\Log\LoggerInterface;
+use chat\interfaces\ConfigInterface;
 
 /**
  * Class ConfigBase
- * @package php\libs\base
+ * @package chat\libs\base
  */
 abstract class ConfigBase implements ConfigInterface
 {

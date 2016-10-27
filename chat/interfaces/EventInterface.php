@@ -6,13 +6,13 @@
  * Time: 20:21
  */
 
-namespace php\interfaces;
+namespace chat\interfaces;
 
-use php\external\User;
+use chat\external\User;
 
 /**
  * Interface EventInterface
- * @package php\interfaces
+ * @package chat\interfaces
  */
 interface EventInterface
 {

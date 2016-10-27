@@ -6,14 +6,14 @@
  * Time: 16:48
  */
 
-namespace php\external;
+namespace chat\external;
 
-use php\external\base\MessageBase;
-use php\interfaces\MessageInterface;
+use chat\external\base\MessageBase;
+use chat\interfaces\MessageInterface;
 
 /**
  * Class Message
- * @package php\external
+ * @package chat\external
  */
 class Message extends MessageBase implements MessageInterface
 {

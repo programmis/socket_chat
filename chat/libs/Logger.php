@@ -6,7 +6,7 @@
  * Time: 15:17
  */
 
-namespace php\libs;
+namespace chat\libs;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
@@ -14,7 +14,7 @@ use Psr\Log\LoggerTrait;
 /**
  * Class Logger
  *
- * @package php
+ * @package chat
  */
 class Logger implements LoggerInterface
 {

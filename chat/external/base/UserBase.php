@@ -6,11 +6,11 @@
  * Time: 16:15
  */
 
-namespace php\external\base;
+namespace chat\external\base;
 
 /**
  * Class UserBase
- * @package php\external\base
+ * @package chat\external\base
  */
 abstract class UserBase
 {

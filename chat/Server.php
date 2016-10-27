@@ -6,13 +6,13 @@
  * Time: 16:19
  */
 
-namespace php;
+namespace chat;
 
-use php\external\User;
-use php\interfaces\ChatInterface;
-use php\interfaces\ConfigInterface;
-use php\libs\Config;
-use php\libs\Security;
+use chat\external\User;
+use chat\interfaces\ChatInterface;
+use chat\interfaces\ConfigInterface;
+use chat\libs\Config;
+use chat\libs\Security;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use React\EventLoop\Factory;
@@ -22,7 +22,7 @@ use React\Socket\Connection;
 /**
  * Class Server
  *
- * @package php
+ * @package chat
  */
 class Server
 {

@@ -6,21 +6,21 @@
  * Time: 16:51
  */
 
-namespace php\interfaces;
+namespace chat\interfaces;
 
-use php\Chat;
-use php\external\Message;
-use php\external\MessageProcessor;
-use php\external\types\Event;
-use php\external\types\System;
-use php\external\User;
-use php\external\UserProcessor;
-use php\libs\Logger;
+use chat\Chat;
+use chat\external\Message;
+use chat\external\MessageProcessor;
+use chat\external\types\Event;
+use chat\external\types\System;
+use chat\external\User;
+use chat\external\UserProcessor;
+use chat\libs\Logger;
 use Psr\Log\LoggerInterface;
 
 /**
  * Interface ConfigInterface
- * @package php\interfaces
+ * @package chat\interfaces
  */
 interface ConfigInterface
 {

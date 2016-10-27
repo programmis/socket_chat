@@ -6,14 +6,14 @@
  * Time: 12:02
  */
 
-namespace php\interfaces;
+namespace chat\interfaces;
 
-use php\external\User;
+use chat\external\User;
 
 /**
  * Interface UserInterface
  *
- * @package php\interfaces
+ * @package chat\interfaces
  */
 interface UserProcessorInterface
 {

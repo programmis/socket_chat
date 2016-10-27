@@ -6,14 +6,14 @@
  * Time: 20:21
  */
 
-namespace php\external\types;
+namespace chat\external\types;
 
-use php\external\User;
-use php\interfaces\EventInterface;
+use chat\external\User;
+use chat\interfaces\EventInterface;
 
 /**
  * Class Event
- * @package php\external\types
+ * @package chat\external\types
  */
 class Event implements EventInterface
 {

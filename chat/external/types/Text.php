@@ -6,14 +6,14 @@
  * Time: 21:15
  */
 
-namespace php\external\types;
+namespace chat\external\types;
 
-use php\external\User;
-use php\interfaces\TextInterface;
+use chat\external\User;
+use chat\interfaces\TextInterface;
 
 /**
  * Class Text
- * @package php\external\types
+ * @package chat\external\types
  */
 class Text implements TextInterface
 {

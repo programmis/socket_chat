@@ -6,14 +6,14 @@
  * Time: 13:05
  */
 
-namespace php\external\types;
+namespace chat\external\types;
 
-use php\external\User;
-use php\interfaces\SystemIterface;
+use chat\external\User;
+use chat\interfaces\SystemIterface;
 
 /**
  * Class System
- * @package php\libs
+ * @package chat\libs
  */
 class System implements SystemIterface
 {
