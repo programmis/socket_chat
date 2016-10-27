@@ -46,6 +46,7 @@ var socketChat = {
             socketChat.is_connect = true;
             socketChat.getUserList();
             console.log("Сonnected");
+            socketChat.onConnect();
         };
 
         socketChat.socket.onclose = function (event) {
@@ -58,6 +59,7 @@ var socketChat = {
                 msg += ' broken';
             }
             console.log(msg);
+            socketChat.onDisconnect();
         };
 
         socketChat.socket.onmessage = function (event) {
@@ -85,6 +87,10 @@ var socketChat = {
                     }
                 );
             });
+    },
+    onConnect: function () {
+    },
+    onDisconnect: function () {
     },
     onUserRender: function (user) {
     },

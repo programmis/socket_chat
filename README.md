@@ -52,6 +52,8 @@ socketChat.message_history_period = "For default request message history";
 
 _Functions_
 <pre>
+socketChat.open(); - open connect with server
+socketChat.close(); - close connect with server
 socketChat.send(user_id); - send message to user, if user_id is undefined then send message to all users in current room 
 socketChat.getUserList(); - get all users in current room
 socketChat.getMessageHistory(with_user_id, period); - get all messages for current user and with_user_id by period
@@ -59,12 +61,14 @@ socketChat.getMessageHistory(with_user_id, period); - get all messages for curre
 
 _Events_
 <pre>
-socketChat.onMessageRender - call on render message with "message" in parameter 
-socketChat.onMessageListRender - call on render message list with "message_list" in parameter
-socketChat.onUserRender - call on user render with "user" in parameter
-socketChat.onUserListRender - call on user list render with "user_list" in parameter
-socketChat.onUserTypingStart - call on user start typing with "user_id" in parameter
-socketChat.onUserTypingEnd - call on user end typing with "user_id" in parameter
+socketChat.onConnect - called if chat connected to server
+socketChat.onDisconnect - call if chat disconnected with server
+socketChat.onMessageRender - called if render message with "message" in parameter 
+socketChat.onMessageListRender - called if render message list with "message_list" in parameter
+socketChat.onUserRender - called if user render with "user" in parameter
+socketChat.onUserListRender - called if user list render with "user_list" in parameter
+socketChat.onUserTypingStart - called if user start typing with "user_id" in parameter
+socketChat.onUserTypingEnd - called if user end typing with "user_id" in parameter
 </pre>
 
 **For example see index.php and socketChatDemo.js files**
