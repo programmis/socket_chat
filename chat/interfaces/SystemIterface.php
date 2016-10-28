@@ -17,6 +17,7 @@ interface SystemIterface
     const TYPE_USER_DISCONNECTED = 'user_disconnected';
     const TYPE_USER_CONNECTED = 'user_connected';
     const TYPE_USER_LIST = 'user_list';
+    const TYPE_USER_INFO = 'user_info';
     const TYPE_USER_HISTORY = 'user_history';
     const TYPE_USER_REMOVED = 'user_removed';
 

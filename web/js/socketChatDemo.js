@@ -31,7 +31,7 @@ $(function () {
             socketChat.onMessageRender(message);
         });
     };
-    socketChat.onUserRender = function (user) {
+    socketChat.onUserInfo = function (user) {
         var html = "<div class='"
             + (user.is_online ? "online" : "offline")
             + "' id='" + user.id + "'>" + user.id + " <span class='"

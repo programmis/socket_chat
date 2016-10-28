@@ -4,6 +4,7 @@
 
 var socketChat = {
     is_connect: false,
+    auto_reconnect: true,
     socket: null,
 
     socket_url: '127.0.0.1:1337',
@@ -30,6 +31,7 @@ var socketChat = {
     SYSTEM_TYPE_USER_CONNECTED: '',
     SYSTEM_TYPE_USER_DISCONNECTED: '',
     SYSTEM_TYPE_USER_REMOVED: '',
+    SYSTEM_TYPE_USER_INFO: '',
     SYSTEM_TYPE_USER_HISTORY: '',
 
     eventUserTypingTimers: [],
@@ -65,7 +67,6 @@ var socketChat = {
 
         socketChat.socket.onclose = function (event) {
             var msg = 'Closed';
-            socketChat.is_connect = false;
 
             if (event.wasClean) {
                 msg += ' clean';
@@ -73,6 +74,16 @@ var socketChat = {
                 msg += ' broken';
             }
             console.log(msg);
+
+            if (socketChat.is_connect) {
+                socketChat.is_connect = false;
+                if (socketChat.auto_reconnect) {
+                    setTimeout(function () {
+                        socketChat.open();
+                    }, 100);
+                }
+            }
+
             socketChat.onDisconnect();
         };
 
@@ -113,11 +124,17 @@ var socketChat = {
     },
     onDisconnect: function () {
     },
-    onUserRender: function (user) {
+    onUserInfo: function (user) {
     },
-    onUserListRender: function (user_list) {
+    onUserConnect: function (user) {
+    },
+    onUserDisconnect: function (user) {
+    },
+    onUserRemoved: function (user) {
+    },
+    onUserList: function (user_list) {
         $.each(user_list, function (key, user) {
-            socketChat.onUserRender(user);
+            socketChat.onUserInfo(user);
         });
     },
     onMessageRender: function (message) {
@@ -143,11 +160,19 @@ var socketChat = {
     systemProcessing: function (system) {
         switch (system.system) {
             case socketChat.SYSTEM_TYPE_USER_CONNECTED:
+                socketChat.onUserConnect(system.user);
+                break;
             case socketChat.SYSTEM_TYPE_USER_DISCONNECTED:
-                socketChat.onUserRender(system.user);
+                socketChat.onUserDisconnect(system.user);
+                break;
+            case socketChat.SYSTEM_TYPE_USER_REMOVED:
+                socketChat.onUserRemoved(system.user);
                 break;
             case socketChat.SYSTEM_TYPE_USER_LIST:
-                socketChat.onUserListRender(system.data);
+                socketChat.onUserList(system.data);
+                break;
+            case socketChat.SYSTEM_TYPE_USER_INFO:
+                socketChat.onUserInfo(system.user);
                 break;
             case socketChat.SYSTEM_TYPE_USER_HISTORY:
                 socketChat.onMessageListRender(system.data);
@@ -175,8 +200,8 @@ var socketChat = {
         socketChat.onUserTypingStart(event.user.id);
     },
     close: function () {
-        socketChat.socket.close();
         socketChat.is_connect = false;
+        socketChat.socket.close();
         console.log('Closing');
     },
     send: function (recipient_id) {

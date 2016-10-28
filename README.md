@@ -68,8 +68,11 @@ socketChat.onConnect - called if chat connected to server
 socketChat.onDisconnect - call if chat disconnected with server
 socketChat.onMessageRender - called if render message with "message" in parameter 
 socketChat.onMessageListRender - called if render message list with "message_list" in parameter
-socketChat.onUserRender - called if user render with "user" in parameter
-socketChat.onUserListRender - called if user list render with "user_list" in parameter
+socketChat.onUserConnect - called if user connect to chat with "user" in parameter
+socketChat.onUserDisconnect - called if user disconnect from chat with "user" in parameter
+socketChat.onUserRemoved - called if user removed from chat with "user" in parameter
+socketChat.onUserInfo - called if received user info with "user" in parameter
+socketChat.onUserList - called if user list received with "user_list" in parameter
 socketChat.onUserTypingStart - called if user start typing with "user_id" in parameter
 socketChat.onUserTypingEnd - called if user end typing with "user_id" in parameter
 </pre>

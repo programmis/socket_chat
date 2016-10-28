@@ -219,6 +219,7 @@ class Server
         $system_type_user_disconnected = $system::TYPE_USER_DISCONNECTED;
         $system_type_user_removed = $system::TYPE_USER_REMOVED;
         $system_type_user_history = $system::TYPE_USER_HISTORY;
+        $system_type_user_info = $system::TYPE_USER_INFO;
 
         $js = <<<JS
                 socketChat.DEFAULT_ROOM = "$default_room";
@@ -235,6 +236,7 @@ class Server
                 socketChat.SYSTEM_TYPE_USER_DISCONNECTED = "$system_type_user_disconnected";
                 socketChat.SYSTEM_TYPE_USER_REMOVED = "$system_type_user_removed";
                 socketChat.SYSTEM_TYPE_USER_HISTORY = "$system_type_user_history";
+                socketChat.SYSTEM_TYPE_USER_INFO = "$system_type_user_info";
 JS;
 
         return $js;
