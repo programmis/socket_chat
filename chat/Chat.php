@@ -226,9 +226,12 @@ class Chat implements ChatInterface
                 if ($user && $exclude && $key == $user->id) {
                     continue;
                 }
-                if ($message_array['type'] == Message::TYPE_TEXT) {
+                $sender_id = $message_array[Message::CONTAINER][User::CONTAINER]['id'] ?? 0;
+                if ($message_array['type'] == Message::TYPE_TEXT &&
+                    $sender_id != $key
+                ) {
                     $message::addMessage(
-                        $message_array[Message::CONTAINER][User::CONTAINER]['id'],
+                        $sender_id,
                         $key,
                         $message_array[Message::CONTAINER][Message::TYPE_TEXT],
                         []
