@@ -213,6 +213,7 @@ class Server
         $message_container = $message::CONTAINER;
         $user_container = $user::CONTAINER;
         $system_command_get_user_list = $system::COMMAND_GET_USER_LIST;
+        $system_command_get_user_info = $system::COMMAND_GET_USER_INFO;
         $system_command_get_message_history = $system::COMMAND_GET_MESSAGE_HISTORY;
         $system_type_user_list = $system::TYPE_USER_LIST;
         $system_type_user_connected = $system::TYPE_USER_CONNECTED;
@@ -230,6 +231,7 @@ class Server
                 socketChat.MESSAGE_CONTAINER = "$message_container";
                 socketChat.USER_CONTAINER = "$user_container";
                 socketChat.SYSTEM_COMMAND_GET_USER_LIST = "$system_command_get_user_list";
+                socketChat.SYSTEM_COMMAND_GET_USER_INFO = "$system_command_get_user_info";
                 socketChat.SYSTEM_COMMAND_GET_MESSAGE_HISTORY = "$system_command_get_message_history";
                 socketChat.SYSTEM_TYPE_USER_CONNECTED = "$system_type_user_connected";
                 socketChat.SYSTEM_TYPE_USER_LIST = "$system_type_user_list";

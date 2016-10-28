@@ -16,6 +16,7 @@ use chat\external\types\Text;
 use chat\external\User;
 use chat\external\UserProcessor;
 use chat\interfaces\ChatInterface;
+use chat\interfaces\ConfigInterface;
 use chat\interfaces\MessageProcessorInterface;
 use chat\interfaces\UserInterface;
 use chat\interfaces\UserProcessorInterface;
@@ -53,8 +54,8 @@ class Chat implements ChatInterface
     public function __construct(Server $server)
     {
         $this->server = $server;
+        $config = $this->getConfigClass();
 
-        $config = $server::getConfigClass();
         $messageProcessor = $config::getMessageProcessorClass();
         $messageProcessor = new $messageProcessor;
         if (!($messageProcessor instanceof MessageProcessorInterface)) {
@@ -70,6 +71,16 @@ class Chat implements ChatInterface
         $this->userProcessor = $userProcessor;
 
         self::$is_create = false;
+    }
+
+    /**
+     * @return ConfigInterface
+     */
+    private function getConfigClass()
+    {
+        $server = $this->server;
+
+        return $server::getConfigClass();
     }
 
     /** @inheritdoc */
@@ -208,7 +219,7 @@ class Chat implements ChatInterface
         /** @var User $user */
         $server = $this->server;
         $message_json = json_encode($message_array);
-        $config = $server::getConfigClass();
+        $config = $this->getConfigClass();
         $message = $config::getMessageClass();
 
         if ($user && !$exclude) {
@@ -326,11 +337,23 @@ class Chat implements ChatInterface
      */
     protected function systemMessageReceived($data, $room, UserInterface $sender)
     {
+        $config = $this->getConfigClass();
+
         /** @var User $sender */
         switch ($data[Message::TYPE_SYSTEM]) {
             case System::COMMAND_GET_USER_LIST:
                 $system_data = $this->getRoomUserList($room, $sender->id);
                 $system_type = System::TYPE_USER_LIST;
+                break;
+            case System::COMMAND_GET_USER_INFO:
+                $user = $config::getUserClass();
+                $user = $user::findOne($data[User::CONTAINER]['id'] ?? 0);
+                if ($user) {
+                    $system_data = [User::CONTAINER => $user->getInfo()];
+                } else {
+                    $system_data = [];
+                }
+                $system_type = System::TYPE_USER_INFO;
                 break;
             case System::COMMAND_GET_MESSAGE_HISTORY:
                 $system_data = Message::getHistory(

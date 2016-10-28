@@ -26,6 +26,7 @@ var socketChat = {
     DEFAULT_ROOM: '',
     EVENT_TYPING: '',
     SYSTEM_COMMAND_GET_USER_LIST: '',
+    SYSTEM_COMMAND_GET_USER_INFO: '',
     SYSTEM_COMMAND_GET_MESSAGE_HISTORY: '',
     SYSTEM_TYPE_USER_LIST: '',
     SYSTEM_TYPE_USER_CONNECTED: '',
@@ -144,6 +145,16 @@ var socketChat = {
     onUserTypingStart: function (user_id) {
     },
     onUserTypingEnd: function (user_id) {
+    },
+    getUserInfo: function (user_id) {
+        socketChat.sendSystem(
+            socketChat.SYSTEM_COMMAND_GET_USER_INFO,
+            {
+                user: {
+                    id: user_id
+                }
+            }
+        );
     },
     getUserList: function () {
         socketChat.sendSystem(socketChat.SYSTEM_COMMAND_GET_USER_LIST);

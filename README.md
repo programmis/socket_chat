@@ -59,6 +59,7 @@ socketChat.close(); - close connect with server
 socketChat.setMessageAreaId(id); - set textarea id for messages
 socketChat.send(); - send message from message_area to socketChat.recipient_id 
 socketChat.getUserList(); - get all users in current room
+socketChat.getUserInfo(user_id); - get info about user
 socketChat.getMessageHistory(with_user_id, period); - get all messages for current user and with_user_id by period
 </pre>
 

@@ -22,6 +22,7 @@ interface SystemIterface
     const TYPE_USER_REMOVED = 'user_removed';
 
     const COMMAND_GET_USER_LIST = 'getUserList';
+    const COMMAND_GET_USER_INFO = 'getUserInfo';
     const COMMAND_GET_MESSAGE_HISTORY = 'getMessageHistory';
 
     /**
