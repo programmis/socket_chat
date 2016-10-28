@@ -42,6 +42,7 @@ _Init java constants_
 
 _Settings_
 <pre>
+socketChat.current_user_id = "Current user id in chat";
 socketChat.socket_url = "You're server address : and port";
 socketChat.send_on_enter = "If this true, then all messages sending by press on enter key, ctrl+enter default"
 socketChat.recipient_id = 'Message recipient id, you can fill it before send messages';

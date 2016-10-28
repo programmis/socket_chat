@@ -5,7 +5,9 @@
 var socketChat = {
     is_connect: false,
     socket: null,
+
     socket_url: '127.0.0.1:1337',
+    current_user_id: 0,
     room: '',
     hash: '',
 
