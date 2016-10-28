@@ -1,6 +1,8 @@
 {
   "name": "programmis/socket-chat",
   "description": "Simple socket chat",
+  "homepage": "https://github.com/programmis/socket_chat",
+  "license": "MIT",
   "type": "extra",
   "require": {
     "react/socket": "^0.4.3",
