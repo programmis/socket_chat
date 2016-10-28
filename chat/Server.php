@@ -124,7 +124,7 @@ class Server
                 }
             });
             $conn->on('close', function () use ($info) {
-                $this->chat->cleanConnections($info);
+                $this->chat->onCloseConnection($info);
 
                 self::log('Connection close');
             });

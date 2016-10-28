@@ -8,7 +8,6 @@
 
 namespace chat\interfaces;
 
-use chat\external\User;
 use React\Socket\Connection;
 
 /**
@@ -29,14 +28,14 @@ interface ChatInterface
      * @param Connection $conn
      * @param array $connection_info
      *
-     * @return User
+     * @return UserInterface
      */
     public function createUser(Connection $conn, array $connection_info);
 
     /**
      * @param array $connection_info
      */
-    public function cleanConnections(array $connection_info);
+    public function onCloseConnection(array $connection_info);
 
     /**
      * @param array $data

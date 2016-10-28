@@ -83,23 +83,20 @@ class Chat implements ChatInterface
     }
 
     /** @inheritdoc */
-    public function cleanConnections(array $connection_info)
+    public function onCloseConnection(array $connection_info)
     {
         $room = $connection_info['room'];
+        $user = $connection_info[User::CONTAINER];
+        $userInfo = $this->roomUsers[$room][$user->id];
+        /** @var Connection $connection */
+        $connection = $userInfo[UserProcessor::STRUCTURE_CONNECTION];
+        if (!$connection->isWritable()) {
+            $user->offline();
 
-        foreach ($this->roomUsers[$room] as $roomUser) {
-            /** @var Connection $connection */
-            $connection = $roomUser[UserProcessor::STRUCTURE_CONNECTION];
-            if (!$connection->isWritable()) {
-                /** @var User $user */
-                $user = $roomUser[UserProcessor::STRUCTURE_CLASS];
-                $user->offline();
+            $data = System::prepareToSend(System::TYPE_USER_DISCONNECTED, [], $user);
+            $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
-                $data = System::prepareToSend(System::TYPE_USER_DISCONNECTED, [], $user);
-                $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
-
-                $this->sendMessageToRoomUsers($message_array, $room, $user, true);
-            }
+            $this->sendMessageToRoomUsers($message_array, $room, $user, true);
         }
     }
 
