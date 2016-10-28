@@ -8,8 +8,6 @@
 
 namespace chat\interfaces;
 
-use chat\external\User;
-
 /**
  * Interface SystemIterface
  * @package chat\interfaces
@@ -26,10 +24,11 @@ interface SystemIterface
     const COMMAND_GET_MESSAGE_HISTORY = 'getMessageHistory';
 
     /**
-     * @param string $system
-     * @param int $user_id
+     * @param string $type
+     * @param array $data
+     * @param UserInterface $user
      *
-     * @return string
+     * @return array
      */
-    public static function prepareToSend($type, $data = [], User $user = null);
+    public static function prepareToSend($type, $data = [], UserInterface $user = null);
 }

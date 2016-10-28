@@ -10,6 +10,7 @@ namespace chat\external\types;
 
 use chat\external\User;
 use chat\interfaces\TextInterface;
+use chat\interfaces\UserInterface;
 
 /**
  * Class Text
@@ -18,7 +19,7 @@ use chat\interfaces\TextInterface;
 class Text implements TextInterface
 {
     /** @inheritdoc */
-    public static function prepareToSend(User $sender, $message)
+    public static function prepareToSend(UserInterface $sender, $message)
     {
         $data = [
             'text' => $message,

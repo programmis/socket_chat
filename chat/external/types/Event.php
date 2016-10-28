@@ -10,6 +10,7 @@ namespace chat\external\types;
 
 use chat\external\User;
 use chat\interfaces\EventInterface;
+use chat\interfaces\UserInterface;
 
 /**
  * Class Event
@@ -18,7 +19,7 @@ use chat\interfaces\EventInterface;
 class Event implements EventInterface
 {
     /** @inheritdoc */
-    public static function prepareToSend($event, User $sender, $data)
+    public static function prepareToSend($event, UserInterface $sender, $data)
     {
         return [
             User::CONTAINER => $sender->getInfo(),

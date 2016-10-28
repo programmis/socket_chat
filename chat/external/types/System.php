@@ -10,6 +10,7 @@ namespace chat\external\types;
 
 use chat\external\User;
 use chat\interfaces\SystemIterface;
+use chat\interfaces\UserInterface;
 
 /**
  * Class System
@@ -18,8 +19,9 @@ use chat\interfaces\SystemIterface;
 class System implements SystemIterface
 {
     /** @inheritdoc */
-    public static function prepareToSend($type, $data = [], User $user = null)
+    public static function prepareToSend($type, $data = [], UserInterface $user = null)
     {
+        /** @var User $user */
         $message = [
             'system' => $type,
             'data' => $data

@@ -8,8 +8,6 @@
 
 namespace chat\interfaces;
 
-use chat\external\User;
-
 /**
  * Interface MessageInterface
  *
@@ -28,18 +26,18 @@ interface MessageProcessorInterface
     /**
      * @param array $message
      * @param string $room
-     * @param User $sender
+     * @param UserInterface $sender
      *
      * @return array ['system_type', [system data]]
      */
-    public function system($message, $room, User $sender);
+    public function system($message, $room, UserInterface $sender);
 
     /**
      * @param array $event
      * @param string $room
-     * @param User $sender
+     * @param UserInterface $sender
      *
      * @return array ['event_type', [event data]]
      */
-    public function event($event, $room, User $sender);
+    public function event($event, $room, UserInterface $sender);
 }

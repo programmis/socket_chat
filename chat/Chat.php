@@ -17,6 +17,7 @@ use chat\external\User;
 use chat\external\UserProcessor;
 use chat\interfaces\ChatInterface;
 use chat\interfaces\MessageProcessorInterface;
+use chat\interfaces\UserInterface;
 use chat\interfaces\UserProcessorInterface;
 use React\Socket\Connection;
 
@@ -150,9 +151,9 @@ class Chat implements ChatInterface
     /**
      * @param array $data
      * @param string $room
-     * @param User $sender
+     * @param UserInterface $sender
      */
-    protected function textProcessing($data, $room, User $sender)
+    protected function textProcessing($data, $room, UserInterface $sender)
     {
         switch ($data['type'] ?? '') {
             case Message::TYPE_EVENT:
@@ -170,9 +171,9 @@ class Chat implements ChatInterface
     /**
      * @param array $data
      * @param string $room
-     * @param User $sender
+     * @param UserInterface $sender
      */
-    protected function eventReceived($data, $room, User $sender)
+    protected function eventReceived($data, $room, UserInterface $sender)
     {
         switch ($data[Message::TYPE_EVENT]) {
             case Event::TYPING:
@@ -195,11 +196,16 @@ class Chat implements ChatInterface
     /**
      * @param array $message_array (result of function Chat::prepareDataToSend)
      * @param string $room
-     * @param User|null $user
+     * @param UserInterface|null $user
      * @param bool $exclude
      */
-    protected function sendMessageToRoomUsers($message_array, string $room, User $user = null, $exclude = false)
-    {
+    protected function sendMessageToRoomUsers(
+        $message_array,
+        string $room,
+        UserInterface $user = null,
+        $exclude = false
+    ) {
+        /** @var User $user */
         $server = $this->server;
         $message_json = json_encode($message_array);
         $config = $server::getConfigClass();
@@ -247,11 +253,11 @@ class Chat implements ChatInterface
     /**
      * @param array $inner_data
      * @param string $room
-     * @param User $sender
+     * @param UserInterface $sender
      *
      * @throws \Exception
      */
-    protected function textReceived($inner_data, $room, User $sender)
+    protected function textReceived($inner_data, $room, UserInterface $sender)
     {
         $message_text = $this->messageProcessor->text($inner_data[Message::CONTAINER]);
         if (!$message_text) {
@@ -313,10 +319,11 @@ class Chat implements ChatInterface
     /**
      * @param array $data
      * @param string $room
-     * @param User $sender
+     * @param UserInterface $sender
      */
-    protected function systemMessageReceived($data, $room, User $sender)
+    protected function systemMessageReceived($data, $room, UserInterface $sender)
     {
+        /** @var User $sender */
         switch ($data[Message::TYPE_SYSTEM]) {
             case System::COMMAND_GET_USER_LIST:
                 $system_data = $this->getRoomUserList($room, $sender->id);

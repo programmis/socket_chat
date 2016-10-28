@@ -8,8 +8,6 @@
 
 namespace chat\interfaces;
 
-use chat\external\User;
-
 /**
  * Interface TextInterface
  * @package chat\interfaces
@@ -17,10 +15,10 @@ use chat\external\User;
 interface TextInterface
 {
     /**
-     * @param User $sender
+     * @param UserInterface $sender
      * @param string $message
      *
      * @return array
      */
-    public static function prepareToSend(User $sender, $message);
+    public static function prepareToSend(UserInterface $sender, $message);
 }

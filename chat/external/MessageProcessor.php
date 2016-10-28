@@ -9,6 +9,7 @@
 namespace chat\external;
 
 use chat\interfaces\MessageProcessorInterface;
+use chat\interfaces\UserInterface;
 
 /**
  * Class Message
@@ -24,13 +25,13 @@ class MessageProcessor implements MessageProcessorInterface
     }
 
     /** @inheritdoc */
-    public function system($message, $room, User $sender)
+    public function system($message, $room, UserInterface $sender)
     {
         return [false, []];
     }
 
     /** @inheritdoc */
-    public function event($event, $room, User $sender)
+    public function event($event, $room, UserInterface $sender)
     {
         return [false, []];
     }

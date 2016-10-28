@@ -8,8 +8,6 @@
 
 namespace chat\interfaces;
 
-use chat\external\User;
-
 /**
  * Interface EventInterface
  * @package chat\interfaces
@@ -20,10 +18,10 @@ interface EventInterface
 
     /**
      * @param string $event
-     * @param User $sender
+     * @param UserInterface $sender
      * @param array $data
      *
      * @return array
      */
-    public static function prepareToSend($event, User $sender, $data);
+    public static function prepareToSend($event, UserInterface $sender, $data);
 }
