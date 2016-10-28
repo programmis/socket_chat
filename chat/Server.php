@@ -146,6 +146,7 @@ class Server
      */
     public function start()
     {
+        self::log('Server started');
         $this->loop->run();
     }
 
@@ -164,19 +165,26 @@ class Server
     {
         $this->socket->shutdown();
         $this->loop->stop();
+        self::log('Server stopped');
     }
 
     /**
-     * @param            $message
+     * @param array $message
      * @param Connection $conn
+     * @param int $recipient_id
      */
-    public static function write($message, Connection $conn)
+    public static function write($message_array, Connection $conn, $recipient_id)
     {
+        $config = self::$config;
+        $messageClass = $config::getMessageClass();
         if (!$conn->isWritable()) {
             return;
         }
-        $conn->write(Security::encode($message));
-        self::log('Send message: ' . $message);
+        $messageClass::beforeSend($recipient_id, $message);
+        $message_json = json_encode($message_array);
+        $conn->write(Security::encode($message_json));
+        $messageClass::afterSend($recipient_id, $message);
+        self::log('Send message: ' . $message_json);
     }
 
     /**

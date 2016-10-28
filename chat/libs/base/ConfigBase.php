@@ -17,6 +17,14 @@ use chat\interfaces\ConfigInterface;
 abstract class ConfigBase implements ConfigInterface
 {
     /** @inheritdoc */
+    public static function getTextClass()
+    {
+        $config = self::class;
+
+        return $config::TEXT_CLASS;
+    }
+
+    /** @inheritdoc */
     public static function getMessageProcessorClass()
     {
         $config = self::class;

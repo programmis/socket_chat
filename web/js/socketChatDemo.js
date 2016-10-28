@@ -7,7 +7,8 @@ var dialog_container_id = 'dialog_container';
 var users_container_id = 'users_container';
 
 $(function () {
-    socketChat.message_area_id = 'socketChat';
+    socketChat.setMessageAreaId('socketChat');
+    socketChat.room = "test";
 
     $('#' + users_container_id).on('click', 'div', function () {
         $('#' + users_container_id).find('div').removeClass('active');
@@ -30,6 +31,12 @@ $(function () {
             };
             socketChat.onMessageRender(message);
         });
+    };
+    socketChat.onUserConnect = function (user) {
+        socketChat.onUserInfo(user);
+    };
+    socketChat.onUserDisconnect = function (user) {
+        socketChat.onUserInfo(user);
     };
     socketChat.onUserInfo = function (user) {
         var html = "<div class='"

@@ -13,6 +13,7 @@ use chat\external\Message;
 use chat\external\MessageProcessor;
 use chat\external\types\Event;
 use chat\external\types\System;
+use chat\external\types\Text;
 use chat\external\User;
 use chat\external\UserProcessor;
 use chat\libs\Logger;
@@ -29,6 +30,7 @@ interface ConfigInterface
     const CHAT_CLASS = Chat::class;
     const LOGGER_CLASS = Logger::class;
     const SYSTEM_CLASS = System::class;
+    const TEXT_CLASS = Text::class;
     const EVENT_CLASS = Event::class;
     const MESSAGE_PROCESSOR_CLASS = MessageProcessor::class;
     const USER_PROCESSOR_CLASS = UserProcessor::class;
@@ -56,4 +58,7 @@ interface ConfigInterface
 
     /** @return EventInterface */
     public static function getEventClass();
+
+    /** @return TextInterface */
+    public static function getTextClass();
 }

@@ -12,7 +12,6 @@ use chat\external\Message;
 use chat\external\MessageProcessor;
 use chat\external\types\Event;
 use chat\external\types\System;
-use chat\external\types\Text;
 use chat\external\User;
 use chat\external\UserProcessor;
 use chat\interfaces\ChatInterface;
@@ -218,37 +217,15 @@ class Chat implements ChatInterface
     ) {
         /** @var User $user */
         $server = $this->server;
-        $message_json = json_encode($message_array);
-        $config = $this->getConfigClass();
-        $message = $config::getMessageClass();
 
         if ($user && !$exclude) {
-            if ($message_array['type'] == Message::TYPE_TEXT) {
-                $message::addMessage(
-                    $message_array[Message::CONTAINER][User::CONTAINER]['id'],
-                    $user->id,
-                    $message_array[Message::CONTAINER][Message::TYPE_TEXT],
-                    []
-                );
-            }
-            $server::write($message_json, $this->getUserConnection($room, $user->id));
+            $server::write($message_array, $this->getUserConnection($room, $user->id), $user->id);
         } else {
             foreach ($this->roomUsers[$room] as $key => $roomUser) {
                 if ($user && $exclude && $key == $user->id) {
                     continue;
                 }
-                $sender_id = $message_array[Message::CONTAINER][User::CONTAINER]['id'] ?? 0;
-                if ($message_array['type'] == Message::TYPE_TEXT &&
-                    $sender_id != $key
-                ) {
-                    $message::addMessage(
-                        $sender_id,
-                        $key,
-                        $message_array[Message::CONTAINER][Message::TYPE_TEXT],
-                        []
-                    );
-                }
-                $server::write($message_json, $this->getUserConnection($room, $key));
+                $server::write($message_array, $this->getUserConnection($room, $key), $key);
             }
         }
     }
@@ -278,13 +255,17 @@ class Chat implements ChatInterface
             return;
         }
 
-        $data = Text::prepareToSend($sender, $message_text);
+        $config = $this->getConfigClass();
+        $text = $config::getTextClass();
+        $user = $config::getUserClass();
+
+        $data = $text::prepareToSend($sender, $message_text);
         $message_array = $this->prepareDataToSend(Message::TYPE_TEXT, $data);
 
         if (!isset($inner_data['recipient_id']) || !$inner_data['recipient_id']) {
             $this->sendMessageToRoomUsers($message_array, $room);
         } else {
-            $recipient = User::findOne($inner_data['recipient_id']);
+            $recipient = $user::findOne($inner_data['recipient_id']);
             if (!$recipient || !isset($this->roomUsers[$room][$recipient->id])) {
                 throw new \Exception('User not found');
             }
