@@ -30,7 +30,7 @@ class Message extends MessageBase implements MessageInterface
     /** @inheritdoc */
     public static function getHistory($owner_id, $opponent_id, $options = [])
     {
-        return self::$list;
+        return self::$list ? self::$list : [];
     }
 
     /** @inheritdoc */
