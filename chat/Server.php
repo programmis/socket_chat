@@ -169,7 +169,7 @@ class Server
     }
 
     /**
-     * @param array $message
+     * @param array $message_array
      * @param Connection $conn
      * @param int $sender_id
      * @param int $recipient_id
@@ -181,10 +181,10 @@ class Server
         if (!$conn->isWritable()) {
             return;
         }
-        $messageClass::beforeSend($sender_id, $recipient_id, $message);
+        $messageClass::beforeSend($sender_id, $recipient_id, $message_array);
         $message_json = json_encode($message_array);
         $conn->write(Security::encode($message_json));
-        $messageClass::afterSend($sender_id, $recipient_id, $message);
+        $messageClass::afterSend($sender_id, $recipient_id, $message_array);
         self::log('Send message: ' . $message_json);
     }
 
