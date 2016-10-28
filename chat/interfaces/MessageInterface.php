@@ -23,11 +23,6 @@ interface MessageInterface
     const CONTAINER = 'message';
 
     /**
-     * @return bool
-     */
-    public function save();
-
-    /**
      * @param int $owner_id
      * @param int $opponent_id
      * @param array $options
