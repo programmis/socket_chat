@@ -171,19 +171,20 @@ class Server
     /**
      * @param array $message
      * @param Connection $conn
+     * @param int $sender_id
      * @param int $recipient_id
      */
-    public static function write($message_array, Connection $conn, $recipient_id)
+    public static function write($message_array, Connection $conn, $sender_id, $recipient_id)
     {
         $config = self::$config;
         $messageClass = $config::getMessageClass();
         if (!$conn->isWritable()) {
             return;
         }
-        $messageClass::beforeSend($recipient_id, $message);
+        $messageClass::beforeSend($sender_id, $recipient_id, $message);
         $message_json = json_encode($message_array);
         $conn->write(Security::encode($message_json));
-        $messageClass::afterSend($recipient_id, $message);
+        $messageClass::afterSend($sender_id, $recipient_id, $message);
         self::log('Send message: ' . $message_json);
     }
 

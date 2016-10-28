@@ -96,7 +96,7 @@ class Chat implements ChatInterface
             $data = System::prepareToSend(System::TYPE_USER_DISCONNECTED, [], $user);
             $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
-            $this->sendMessageToRoomUsers($message_array, $room, $user, true);
+            $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
         }
     }
 
@@ -113,7 +113,7 @@ class Chat implements ChatInterface
         $data = System::prepareToSend(System::TYPE_USER_CONNECTED, [], $user);
         $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
-        $this->sendMessageToRoomUsers($message_array, $room, $user, true);
+        $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
 
         return $user;
     }
@@ -128,8 +128,7 @@ class Chat implements ChatInterface
             case self::DATA_TYPE_TEXT:
                 $this->textProcessing(
                     json_decode($payload, true),
-                    $connection_info['room'],
-                    $connection_info[User::CONTAINER]
+                    $connection_info
                 );
                 break;
             case self::DATA_TYPE_CLOSE:
@@ -157,20 +156,31 @@ class Chat implements ChatInterface
 
     /**
      * @param array $data
-     * @param string $room
-     * @param UserInterface $sender
+     * @param array $connection_info
      */
-    protected function textProcessing($data, $room, UserInterface $sender)
+    protected function textProcessing($data, $connection_info)
     {
         switch ($data['type'] ?? '') {
             case Message::TYPE_EVENT:
-                $this->eventReceived($data[Message::CONTAINER], $room, $sender);
+                $this->eventReceived(
+                    $data[Message::CONTAINER],
+                    $connection_info['room'],
+                    $connection_info[User::CONTAINER]
+                );
                 break;
             case Message::TYPE_TEXT:
-                $this->textReceived($data, $room, $sender);
+                $this->textReceived(
+                    $data,
+                    $connection_info['room'],
+                    $connection_info[User::CONTAINER]
+                );
                 break;
             case Message::TYPE_SYSTEM:
-                $this->systemMessageReceived($data[Message::CONTAINER], $room, $sender);
+                $this->systemMessageReceived(
+                    $data[Message::CONTAINER],
+                    $connection_info['room'],
+                    $connection_info[User::CONTAINER]
+                );
                 break;
         }
     }
@@ -197,32 +207,35 @@ class Chat implements ChatInterface
         $data = Event::prepareToSend($event_type, $sender, $event_data);
         $message_array = $this->prepareDataToSend(Message::TYPE_EVENT, $data);
 
-        $this->sendMessageToRoomUsers($message_array, $room, $sender, true);
+        $this->sendMessageToRoomUsers($sender, $message_array, $room, $sender, true);
     }
 
     /**
+     * @param UserInterface $sender
      * @param array $message_array (result of function Chat::prepareDataToSend)
      * @param string $room
      * @param UserInterface|null $user
      * @param bool $exclude
      */
     protected function sendMessageToRoomUsers(
+        $sender,
         $message_array,
         string $room,
         UserInterface $user = null,
         $exclude = false
     ) {
         /** @var User $user */
+        /** @var User $sender */
         $server = $this->server;
 
         if ($user && !$exclude) {
-            $server::write($message_array, $this->getUserConnection($room, $user->id), $user->id);
+            $server::write($message_array, $this->getUserConnection($room, $user->id), $sender->id, $user->id);
         } else {
             foreach ($this->roomUsers[$room] as $key => $roomUser) {
                 if ($user && $exclude && $key == $user->id) {
                     continue;
                 }
-                $server::write($message_array, $this->getUserConnection($room, $key), $key);
+                $server::write($message_array, $this->getUserConnection($room, $key), $sender->id, $key);
             }
         }
     }
@@ -260,14 +273,14 @@ class Chat implements ChatInterface
         $message_array = $this->prepareDataToSend(Message::TYPE_TEXT, $data);
 
         if (!isset($inner_data['recipient_id']) || !$inner_data['recipient_id']) {
-            $this->sendMessageToRoomUsers($message_array, $room);
+            $this->sendMessageToRoomUsers($sender, $message_array, $room);
         } else {
             $recipient = $user::findOne($inner_data['recipient_id']);
             if (!$recipient || !isset($this->roomUsers[$room][$recipient->id])) {
                 throw new \Exception('User not found');
             }
-            $this->sendMessageToRoomUsers($message_array, $room, $recipient);
-            $this->sendMessageToRoomUsers($message_array, $room, $sender);
+            $this->sendMessageToRoomUsers($sender, $message_array, $room, $recipient);
+            $this->sendMessageToRoomUsers($sender, $message_array, $room, $sender);
         }
     }
 
@@ -356,6 +369,6 @@ class Chat implements ChatInterface
         $data = System::prepareToSend($system_type, $system_data);
         $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
-        $this->sendMessageToRoomUsers($message_array, $room, $sender);
+        $this->sendMessageToRoomUsers($sender, $message_array, $room, $sender);
     }
 }

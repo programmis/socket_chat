@@ -34,11 +34,11 @@ class Message extends MessageBase implements MessageInterface
     }
 
     /** @inheritdoc */
-    public static function beforeSend($recipient_id, &$message_array)
+    public static function beforeSend($sender_id, $recipient_id, &$message_array)
     {
         if (($message_array['type'] ?? '') == Message::TYPE_TEXT) {
             self::addMessage(
-                $message_array[Message::CONTAINER][User::CONTAINER]['id'] ?? 0,
+                $sender_id,
                 $recipient_id,
                 $message_array[Message::CONTAINER][Message::TYPE_TEXT]
             );
@@ -48,7 +48,7 @@ class Message extends MessageBase implements MessageInterface
     }
 
     /** @inheritdoc */
-    public static function afterSend($recipient_id, $message_array)
+    public static function afterSend($sender_id, $recipient_id, $message_array)
     {
     }
 

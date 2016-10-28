@@ -32,14 +32,16 @@ interface MessageInterface
     public static function getHistory($owner_id, $opponent_id, $options = []);
 
     /**
+     * @param int $sender_id
      * @param int $recipient_id
      * @param array $message_array
      */
-    public static function beforeSend($recipient_id, &$message_array);
+    public static function beforeSend($sender_id, $recipient_id, &$message_array);
 
     /**
+     * @param int $sender_id
      * @param int $recipient_id
      * @param array $message_array
      */
-    public static function afterSend($recipient_id, $message_array);
+    public static function afterSend($sender_id, $recipient_id, $message_array);
 }
