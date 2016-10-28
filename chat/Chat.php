@@ -330,10 +330,10 @@ class Chat implements ChatInterface
                 $system_type = System::TYPE_USER_LIST;
                 break;
             case System::COMMAND_GET_MESSAGE_HISTORY:
-                $system_data = Message::getMessageHistoryByPeriod(
+                $system_data = Message::getHistory(
                     $sender->id,
                     $data['data']['with_user_id'],
-                    $data['data']['period']
+                    ['period' => $data['data']['period']]
                 );
                 $system_type = System::TYPE_USER_HISTORY;
                 break;

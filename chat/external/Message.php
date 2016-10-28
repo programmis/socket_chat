@@ -28,7 +28,7 @@ class Message extends MessageBase implements MessageInterface
     }
 
     /** @inheritdoc */
-    public static function getMessageHistoryByPeriod($sender_id, $recipient_id, $period)
+    public static function getHistory($owner_id, $opponent_id, $options = [])
     {
         return self::$list;
     }

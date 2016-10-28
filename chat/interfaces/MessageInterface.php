@@ -28,13 +28,13 @@ interface MessageInterface
     public function save();
 
     /**
-     * @param int $sender_id
-     * @param int $recipient_id
-     * @param int $period
+     * @param int $owner_id
+     * @param int $opponent_id
+     * @param array $options
      *
      * @return Message[]
      */
-    public static function getMessageHistoryByPeriod($sender_id, $recipient_id, $period);
+    public static function getHistory($owner_id, $opponent_id, $options = []);
 
     /**
      * @param int $sender_id
