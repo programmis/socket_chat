@@ -6,6 +6,7 @@ var socketChat = {
     is_connect: false,
     auto_reconnect: true,
     socket: null,
+    sendQueue: [],
 
     socket_url: '127.0.0.1:1337',
     current_user_id: 0,
@@ -13,6 +14,7 @@ var socketChat = {
     hash: '',
 
     user_typing_timeout: 3000,
+    send_queue_check_timeout: 500,
     message_area_id: '',
     message_history_period: 7,
     recipient_id: 0,
@@ -37,6 +39,7 @@ var socketChat = {
 
     eventUserTypingTimers: [],
     waitingRoomTimer: null,
+    sendQueueCheckTimer: null,
 
     open: function () {
         if (socketChat.is_connect) {
@@ -61,6 +64,7 @@ var socketChat = {
 
         socketChat.socket.onopen = function () {
             socketChat.is_connect = true;
+            socketChat.sendQueueCheck();
             socketChat.getUserList();
             console.log("Сonnected");
             socketChat.onConnect();
@@ -102,6 +106,21 @@ var socketChat = {
                     break;
             }
         };
+    },
+    addToSendQueue: function (message) {
+        socketChat.sendQueue.push(message);
+    },
+    sendQueueCheck: function () {
+        if (socketChat.sendQueueCheckTimer) {
+            clearTimeout(socketChat.sendQueueCheckTimer);
+            var message = socketChat.sendQueue.shift();
+            if(message) {
+                socketChat.socket.send(message);
+            }
+        }
+        socketChat.sendQueueCheckTimer = setTimeout(function () {
+            socketChat.sendQueueCheck();
+        }, socketChat.send_queue_check_timeout);
     },
     setMessageAreaId: function (id) {
         socketChat.message_area_id = id;
@@ -237,7 +256,7 @@ var socketChat = {
         return JSON.stringify(msg_arr);
     },
     sendMessage: function (message, recipient_id) {
-        socketChat.socket.send(
+        socketChat.addToSendQueue(
             socketChat.prepareMessage(socketChat.MESSAGE_TYPE_TEXT, message, recipient_id)
         );
     },
@@ -246,8 +265,7 @@ var socketChat = {
             system: system,
             data: data
         };
-
-        socketChat.socket.send(
+        socketChat.addToSendQueue(
             socketChat.prepareMessage(socketChat.MESSAGE_TYPE_SYSTEM, system_data)
         );
     },
@@ -256,7 +274,7 @@ var socketChat = {
             event: event,
             data: data
         };
-        socketChat.socket.send(
+        socketChat.addToSendQueue(
             socketChat.prepareMessage(socketChat.MESSAGE_TYPE_EVENT, event_data)
         );
     }
