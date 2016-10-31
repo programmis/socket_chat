@@ -18,6 +18,17 @@ interface UserInterface
 {
     const CONTAINER = 'user';
 
+    /** is default */
+    const RIGHT_SEND_TO_ANY_USER_IN_ROOM = 1;
+    /** get list from User->getAccessList */
+    const RIGHT_SEND_TO_ANY_USER_IN_LIST = 2;
+
+    /** @return int const RIGHT_SEND_TO_ANY_USER_IN_* */
+    public function getRight();
+
+    /** @return array [user.id, user.id, ...] */
+    public function getAccessList();
+
     /**
      * @return array [
      *      id => 1,

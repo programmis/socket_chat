@@ -229,13 +229,18 @@ class Chat implements ChatInterface
         $server = $this->server;
 
         if ($user && !$exclude) {
-            $server::write($message_array, $this->getUserConnection($room, $user->id), $sender->id, $user->id);
+            $server::write($message_array, $this->getUserConnection($room, $user->id), $sender, $user);
         } else {
             foreach ($this->roomUsers[$room] as $key => $roomUser) {
                 if ($user && $exclude && $key == $user->id) {
                     continue;
                 }
-                $server::write($message_array, $this->getUserConnection($room, $key), $sender->id, $key);
+                $server::write(
+                    $message_array,
+                    $this->getUserConnection($room, $key),
+                    $sender,
+                    $this->roomUsers[$room][$key][UserProcessor::STRUCTURE_CLASS]
+                );
             }
         }
     }

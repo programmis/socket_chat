@@ -11,6 +11,7 @@ namespace chat;
 use chat\external\User;
 use chat\interfaces\ChatInterface;
 use chat\interfaces\ConfigInterface;
+use chat\interfaces\UserInterface;
 use chat\libs\Config;
 use chat\libs\Security;
 use Psr\Log\LoggerInterface;
@@ -171,20 +172,31 @@ class Server
     /**
      * @param array $message_array
      * @param Connection $conn
-     * @param int $sender_id
-     * @param int $recipient_id
+     * @param UserInterface $sender
+     * @param UserInterface $recipient
      */
-    public static function write($message_array, Connection $conn, $sender_id, $recipient_id)
+    public static function write($message_array, Connection $conn, $sender, $recipient)
     {
+        /** @var User $sender */
+        /** @var User $recipient */
+        if ($sender->id != $recipient->id
+            && (
+                $sender->getRight() == UserInterface::RIGHT_SEND_TO_ANY_USER_IN_LIST
+                && !in_array($recipient->id, $sender->getAccessList())
+            )
+        ) {
+            self::log("Can't send message, please check user #" . $sender->id . " right", LogLevel::ERROR);
+            return;
+        }
         $config = self::$config;
         $messageClass = $config::getMessageClass();
         if (!$conn->isWritable()) {
             return;
         }
-        $messageClass::beforeSend($sender_id, $recipient_id, $message_array);
+        $messageClass::beforeSend($sender->id, $recipient->id, $message_array);
         $message_json = json_encode($message_array);
         $conn->write(Security::encode($message_json));
-        $messageClass::afterSend($sender_id, $recipient_id, $message_array);
+        $messageClass::afterSend($sender->id, $recipient->id, $message_array);
         self::log('Send message: ' . $message_json);
     }
 

@@ -19,6 +19,20 @@ class User extends UserBase implements UserInterface
 {
     /** @var User[] $list */
     private static $list = [];
+    /** @var array $access_list */
+    public $access_list = [];
+
+    /** @inheritdoc */
+    public function getRight()
+    {
+        return self::RIGHT_SEND_TO_ANY_USER_IN_ROOM;
+    }
+
+    /** @inheritdoc */
+    public function getAccessList()
+    {
+        return $this->access_list;
+    }
 
     /**
      * User constructor.

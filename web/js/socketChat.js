@@ -242,14 +242,14 @@ var socketChat = {
         socketChat.socket.close();
         console.log('Closing');
     },
-    send: function (recipient_id) {
+    send: function () {
         var msgArea = $('#' + socketChat.message_area_id);
         var message = msgArea.val();
         msgArea.val('');
         if (!message.trim().length) {
             return false;
         }
-        socketChat.sendMessage(message, recipient_id);
+        socketChat.sendMessage(message, socketChat.recipient_id);
         return false;
     },
     prepareMessage: function (type, message, recipient_id) {

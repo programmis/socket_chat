@@ -19,6 +19,8 @@ use chat\Server;
  */
 class UserProcessor implements UserProcessorInterface
 {
+    private static $user_cnt = 1;
+
     /** @inheritdoc */
     public function createUser(array $connection_info)
     {
@@ -31,8 +33,10 @@ class UserProcessor implements UserProcessorInterface
         if (!($user instanceof UserInterface)) {
             throw new \Exception('User class must implement UserInterface');
         }
-        $user->id = rand(1, 999);
+        $user->id = self::$user_cnt;
         $user->online();
+
+        self::$user_cnt++;
 
         return $user;
     }
