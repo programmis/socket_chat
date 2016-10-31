@@ -7,6 +7,7 @@ var socketChat = {
     auto_reconnect: true,
     socket: null,
     sendQueue: [],
+    need_reconnect: false,
 
     socket_url: '127.0.0.1:1337',
     current_user_id: 0,
@@ -14,7 +15,8 @@ var socketChat = {
     hash: '',
 
     user_typing_timeout: 3000,
-    send_queue_check_timeout: 500,
+    send_queue_check_period: 500,
+    auto_reconnect_period: 2000,
     message_area_id: '',
     message_history_period: 7,
     recipient_id: 0,
@@ -40,6 +42,7 @@ var socketChat = {
     eventUserTypingTimers: [],
     waitingRoomTimer: null,
     sendQueueCheckTimer: null,
+    autoReconnectTimer: null,
 
     open: function () {
         if (socketChat.is_connect) {
@@ -55,11 +58,11 @@ var socketChat = {
             }, 500);
             return;
         }
-        var room = socketChat.room ? socketChat.room : socketChat.DEFAULT_ROOM;
+        socketChat.need_reconnect = true;
 
         socketChat.socket = new WebSocket(
             "ws://" + socketChat.socket_url + '/'
-            + room + '/' + socketChat.hash
+            + socketChat.room + '/' + socketChat.hash
         );
 
         socketChat.socket.onopen = function () {
@@ -72,6 +75,7 @@ var socketChat = {
 
         socketChat.socket.onclose = function (event) {
             var msg = 'Closed';
+            socketChat.is_connect = false;
 
             if (event.wasClean) {
                 msg += ' clean';
@@ -80,12 +84,14 @@ var socketChat = {
             }
             console.log(msg);
 
-            if (socketChat.is_connect) {
-                socketChat.is_connect = false;
+            if (socketChat.need_reconnect) {
                 if (socketChat.auto_reconnect) {
-                    setTimeout(function () {
+                    if (socketChat.autoReconnectTimer) {
+                        clearTimeout(socketChat.autoReconnectTimer);
+                    }
+                    socketChat.autoReconnectTimer = setTimeout(function () {
                         socketChat.open();
-                    }, 100);
+                    }, socketChat.auto_reconnect_period);
                 }
             }
 
@@ -113,14 +119,16 @@ var socketChat = {
     sendQueueCheck: function () {
         if (socketChat.sendQueueCheckTimer) {
             clearTimeout(socketChat.sendQueueCheckTimer);
-            var message = socketChat.sendQueue.shift();
-            if(message) {
-                socketChat.socket.send(message);
+            if (socketChat.socket.bufferedAmount == 0) {
+                var message = socketChat.sendQueue.shift();
+                if (message) {
+                    socketChat.socket.send(message);
+                }
             }
         }
         socketChat.sendQueueCheckTimer = setTimeout(function () {
             socketChat.sendQueueCheck();
-        }, socketChat.send_queue_check_timeout);
+        }, socketChat.send_queue_check_period);
     },
     setMessageAreaId: function (id) {
         socketChat.message_area_id = id;
@@ -183,7 +191,7 @@ var socketChat = {
             socketChat.SYSTEM_COMMAND_GET_MESSAGE_HISTORY,
             {
                 with_user_id: with_user_id,
-                period: period ? period : socketChat.message_history_period
+                period: period ? period : (period == 0 ? period : socketChat.message_history_period)
             }
         );
     },
@@ -230,7 +238,7 @@ var socketChat = {
         socketChat.onUserTypingStart(event.user.id);
     },
     close: function () {
-        socketChat.is_connect = false;
+        socketChat.need_reconnect = false;
         socketChat.socket.close();
         console.log('Closing');
     },
