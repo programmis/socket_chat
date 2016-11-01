@@ -181,7 +181,7 @@ class Server
         /** @var User $recipient */
         if ($sender->id != $recipient->id
             && (
-                $sender->getRight() == UserInterface::RIGHT_SEND_TO_ANY_USER_IN_LIST
+                $sender->getSendRight() == UserInterface::RIGHT_SEND_TO_ANY_USER_IN_LIST
                 && !in_array($recipient->id, $sender->getAccessList())
             )
         ) {
