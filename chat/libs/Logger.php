@@ -23,6 +23,6 @@ class Logger implements LoggerInterface
     /** @inheritdoc */
     public function log($level, $message, array $context = array())
     {
-        echo date('Y/m/d H:i:s') . ") " . $message . "\n";
+        echo date('Y/m/d H:i:s') . " $level) " . $message . "\n";
     }
 }
