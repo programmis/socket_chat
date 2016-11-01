@@ -170,11 +170,11 @@ class Server
 
     /**
      * @param array         $message_array
-     * @param Connection    $conn
+     * @param string        $room
      * @param UserInterface $sender
      * @param UserInterface $recipient
      */
-    public static function write($message_array, Connection $conn, $sender, $recipient)
+    public static function write($message_array, $room, $sender, $recipient)
     {
         /** @var User $sender */
         /** @var User $recipient */
@@ -191,7 +191,8 @@ class Server
         $config       = self::$config;
         $messageClass = $config::getMessageClass();
         $messageClass::beforeSend($sender->id, $recipient->id, $message_array);
-        if (!$conn->isWritable()) {
+        $conn = self::$instance->chat->getUserConnection($room, $recipient->id);
+        if (!$conn || !$conn->isWritable()) {
             self::log("Can't send message recipient is offline", LogLevel::ERROR);
 
             return;
