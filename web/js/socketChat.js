@@ -15,7 +15,7 @@ var socketChat = {
     hash: '',
 
     user_typing_timeout: 3000,
-    send_queue_check_period: 500,
+    send_queue_check_period: 100,
     auto_reconnect_period: 2000,
     message_area_id: '',
     message_history_period: 7,
