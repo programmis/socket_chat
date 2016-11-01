@@ -48,7 +48,6 @@ class Server
     /** @var ChatInterface $chat */
     public $chat;
 
-
     /**
      * @return ConfigInterface
      */
@@ -101,7 +100,7 @@ class Server
         $this->initLogger();
         $this->initChat();
 
-        $this->loop = Factory::create();
+        $this->loop   = Factory::create();
         $this->socket = new \React\Socket\Server($this->loop);
         $this->socket->on('connection', function (Connection $conn) {
             $info = Security::handshake($conn);
@@ -121,7 +120,7 @@ class Server
                 try {
                     $this->chat->dataProcessing($data, $info);
                 } catch (\Exception $ex) {
-                    self::log(print_r($ex->getMessage()), LogLevel::CRITICAL);
+                    self::log(print_r($ex->getMessage(), true), LogLevel::CRITICAL);
                 }
             });
             $conn->on('close', function () use ($info) {
@@ -170,8 +169,8 @@ class Server
     }
 
     /**
-     * @param array $message_array
-     * @param Connection $conn
+     * @param array         $message_array
+     * @param Connection    $conn
      * @param UserInterface $sender
      * @param UserInterface $recipient
      */
@@ -186,14 +185,17 @@ class Server
             )
         ) {
             self::log("Can't send message, please check user #" . $sender->id . " right", LogLevel::ERROR);
+
             return;
         }
-        $config = self::$config;
+        $config       = self::$config;
         $messageClass = $config::getMessageClass();
+        $messageClass::beforeSend($sender->id, $recipient->id, $message_array);
         if (!$conn->isWritable()) {
+            self::log("Can't send message recipient is offline", LogLevel::ERROR);
+
             return;
         }
-        $messageClass::beforeSend($sender->id, $recipient->id, $message_array);
         $message_json = json_encode($message_array);
         $conn->write(Security::encode($message_json));
         $messageClass::afterSend($sender->id, $recipient->id, $message_array);
@@ -208,7 +210,7 @@ class Server
     public static function log($message, $level = LogLevel::INFO, array $context = array())
     {
         if (!self::$logger) {
-            $config = self::getConfigClass();
+            $config       = self::getConfigClass();
             self::$logger = $config::getLoggerClass();
         }
         self::$logger->log($level, $message, $context);
@@ -219,29 +221,29 @@ class Server
      */
     public static function fillJavaConstants()
     {
-        $config = self::getConfigClass();
+        $config  = self::getConfigClass();
         $message = $config::getMessageClass();
-        $chat = $config::getChatClass();
-        $system = $config::getSystemClass();
-        $event = $config::getEventClass();
-        $user = $config::getUserClass();
+        $chat    = $config::getChatClass();
+        $system  = $config::getSystemClass();
+        $event   = $config::getEventClass();
+        $user    = $config::getUserClass();
 
-        $default_room = $chat::DEFAULT_ROOM;
-        $event_typing = $event::TYPING;
-        $message_type_event = $message::TYPE_EVENT;
-        $message_type_system = $message::TYPE_SYSTEM;
-        $message_type_text = $message::TYPE_TEXT;
-        $message_container = $message::CONTAINER;
-        $user_container = $user::CONTAINER;
-        $system_command_get_user_list = $system::COMMAND_GET_USER_LIST;
-        $system_command_get_user_info = $system::COMMAND_GET_USER_INFO;
+        $default_room                       = $chat::DEFAULT_ROOM;
+        $event_typing                       = $event::TYPING;
+        $message_type_event                 = $message::TYPE_EVENT;
+        $message_type_system                = $message::TYPE_SYSTEM;
+        $message_type_text                  = $message::TYPE_TEXT;
+        $message_container                  = $message::CONTAINER;
+        $user_container                     = $user::CONTAINER;
+        $system_command_get_user_list       = $system::COMMAND_GET_USER_LIST;
+        $system_command_get_user_info       = $system::COMMAND_GET_USER_INFO;
         $system_command_get_message_history = $system::COMMAND_GET_MESSAGE_HISTORY;
-        $system_type_user_list = $system::TYPE_USER_LIST;
-        $system_type_user_connected = $system::TYPE_USER_CONNECTED;
-        $system_type_user_disconnected = $system::TYPE_USER_DISCONNECTED;
-        $system_type_user_removed = $system::TYPE_USER_REMOVED;
-        $system_type_user_history = $system::TYPE_USER_HISTORY;
-        $system_type_user_info = $system::TYPE_USER_INFO;
+        $system_type_user_list              = $system::TYPE_USER_LIST;
+        $system_type_user_connected         = $system::TYPE_USER_CONNECTED;
+        $system_type_user_disconnected      = $system::TYPE_USER_DISCONNECTED;
+        $system_type_user_removed           = $system::TYPE_USER_REMOVED;
+        $system_type_user_history           = $system::TYPE_USER_HISTORY;
+        $system_type_user_info              = $system::TYPE_USER_INFO;
 
         $js = <<<JS
                 socketChat.DEFAULT_ROOM = "$default_room";

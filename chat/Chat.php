@@ -282,7 +282,7 @@ class Chat implements ChatInterface
         } else {
             $recipient = $user::findOne($inner_data['recipient_id']);
             if (!$recipient || !isset($this->roomUsers[$room][$recipient->id])) {
-                throw new \Exception('User not found');
+                throw new \Exception('User #' . $inner_data['recipient_id'] . ' is not found');
             }
             $this->sendMessageToRoomUsers($sender, $message_array, $room, $recipient);
             $this->sendMessageToRoomUsers($sender, $message_array, $room, $sender);
