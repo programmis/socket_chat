@@ -16,7 +16,7 @@ use chat\external\types\System;
 use chat\external\types\Text;
 use chat\external\User;
 use chat\external\UserProcessor;
-use chat\libs\Logger;
+use logger\Logger;
 use Psr\Log\LoggerInterface;
 
 /**
