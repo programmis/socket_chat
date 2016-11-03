@@ -8,6 +8,7 @@ var socketChat = {
     socket: null,
     sendQueue: [],
     need_reconnect: false,
+    connection_type: 'ws',
 
     socket_url: '127.0.0.1:1337',
     current_user_id: 0,
@@ -61,7 +62,7 @@ var socketChat = {
         socketChat.need_reconnect = true;
 
         socketChat.socket = new WebSocket(
-            "ws://" + socketChat.socket_url + '/'
+            socketChat.connection_type + "://" + socketChat.socket_url + '/'
             + socketChat.room + '/' + socketChat.hash
         );
 
