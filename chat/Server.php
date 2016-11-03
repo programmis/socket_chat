@@ -39,6 +39,8 @@ class Server
     public static $listen_host = '0.0.0.0';
     /** @var string $server_host */
     public static $server_host = '127.0.0.1';
+    /** @var string $connection_type */
+    public static $connection_type = 'ws';
 
     /** @var StreamSelectLoop */
     protected $loop;
@@ -245,6 +247,8 @@ class Server
         $system_type_user_removed           = $system::TYPE_USER_REMOVED;
         $system_type_user_history           = $system::TYPE_USER_HISTORY;
         $system_type_user_info              = $system::TYPE_USER_INFO;
+        $socket_url                         = static::$server_host . ':' . static::$port;
+        $connection_type                    = static::$connection_type;
 
         $js = <<<JS
                 socketChat.DEFAULT_ROOM = "$default_room";
@@ -263,6 +267,8 @@ class Server
                 socketChat.SYSTEM_TYPE_USER_REMOVED = "$system_type_user_removed";
                 socketChat.SYSTEM_TYPE_USER_HISTORY = "$system_type_user_history";
                 socketChat.SYSTEM_TYPE_USER_INFO = "$system_type_user_info";
+                socketChat.socket_url = "$socket_url";
+                socketChat.connection_type = "$connection_type";
 JS;
 
         return $js;
