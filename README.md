@@ -19,10 +19,43 @@ php composer.phar require programmis/socket-chat
 
 <pre>
 $loader = require __DIR__ . '/vendor/autoload.php';
-$loader->add('php', __DIR__);
 
-$server = new php\Server();
+$server = new chat\Server();
 $server->start();
+</pre>
+
+**or in your project**
+<pre>
+class Server extends \chat\Server
+{
+    /** @inheritdoc */
+    public static function getConfigClass()
+    {
+        return "You're config class implemented 
+            from \chat\interfaces\ConfigInterface
+            or extend from \chat\libs\Config";
+        //return MyConfig::class;
+    }
+}
+
+and in you're config class
+
+class Config extends \chat\libs\Config
+{
+    you can override any chat class
+}
+
+and to start 
+
+$server = new yor're\project\namespace\Server();
+
+$server->start();
+or for you daemon
+$server->tick(); //in you're loop
+
+[simple daemon provider](https://github.com/programmis/daemon-provider)
+[how to connect this chat to YII2 framework](https://github.com/programmis/yii2-socket-chat)
+
 </pre>
 
 **Client side**
