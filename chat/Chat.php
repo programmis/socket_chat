@@ -97,6 +97,11 @@ class Chat implements ChatInterface
             $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
             $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
+
+            $config = $this->getConfigClass();
+            $userClass = $config::getUserClass();
+
+            $userClass->onDisconnect($userInfo);
         }
     }
 
@@ -107,13 +112,22 @@ class Chat implements ChatInterface
 
         $user = $this->userProcessor->createUser($connection_info);
 
-        $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_CONNECTION] = $conn;
-        $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_CLASS] = $user;
+        if ($user) {
+            $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_CONNECTION] = $conn;
+            $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_USER] = $user;
+            $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_INFO] = $connection_info;
+            $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_RECIPIENT] = null;
 
-        $data = System::prepareToSend(System::TYPE_USER_CONNECTED, [], $user);
-        $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
+            $data = System::prepareToSend(System::TYPE_USER_CONNECTED, [], $user);
+            $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
-        $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
+            $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
+
+            $config = $this->getConfigClass();
+            $userClass = $config::getUserClass();
+
+            $userClass->onConnect($this->roomUsers[$room][$user->id]);
+        }
 
         return $user;
     }
@@ -197,6 +211,10 @@ class Chat implements ChatInterface
                 $event_data = [];
                 $event_type = Event::TYPING;
                 break;
+            case Event::CHANGE_RECIPIENT:
+                $event_data = [];
+                $event_type = false;
+                break;
             default:
                 list($event_type, $event_data) = $this->messageProcessor->event($data, $room, $sender);
                 break;
@@ -239,7 +257,7 @@ class Chat implements ChatInterface
                     $message_array,
                     $this->getUserConnection($room, $key),
                     $sender,
-                    $this->roomUsers[$room][$key][UserProcessor::STRUCTURE_CLASS]
+                    $this->roomUsers[$room][$key][UserProcessor::STRUCTURE_USER]
                 );
             }
         }
@@ -316,7 +334,7 @@ class Chat implements ChatInterface
 
         foreach ($this->roomUsers[$room] as $user) {
             /** @var User $userClass */
-            $userClass = $user[UserProcessor::STRUCTURE_CLASS];
+            $userClass = $user[UserProcessor::STRUCTURE_USER];
             if ($userClass->id == $for_user_id) {
                 continue;
             }

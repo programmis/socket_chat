@@ -18,7 +18,9 @@ use chat\external\User;
 interface UserProcessorInterface
 {
     const STRUCTURE_CONNECTION = 'connection';
-    const STRUCTURE_CLASS = 'class';
+    const STRUCTURE_USER = 'user';
+    const STRUCTURE_RECIPIENT = 'recipient';
+    const STRUCTURE_INFO = 'info';
 
     /**
      * @param array $connection_info

@@ -15,6 +15,7 @@ namespace chat\interfaces;
 interface EventInterface
 {
     const TYPING = 'typing';
+    const CHANGE_RECIPIENT = 'change_recipient';
 
     /**
      * @param string $event

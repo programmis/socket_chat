@@ -48,6 +48,36 @@ interface UserInterface
     public static function findOne($user_id);
 
     /**
+     * @param array $user_info [
+     *  'user' => UserInterface,
+     *  'connection' => Connection,
+     *  'recipient' => UserInterface (maybe null),
+     *  'info' => array (connection info)
+     * ]
+     */
+    public function onConnect(array $user_info);
+
+    /**
+     * @param array $user_info [
+     *  'user' => UserInterface,
+     *  'connection' => Connection,
+     *  'recipient' => UserInterface (maybe null),
+     *  'info' => array (connection info)
+     * ]
+     */
+    public function onDisconnect(array $user_info);
+
+    /**
+     * @param array $user_info [
+     *  'user' => UserInterface,
+     *  'connection' => Connection,
+     *  'recipient' => UserInterface (maybe null),
+     *  'info' => array (connection info)
+     * ]
+     */
+    public function onChangeRecipient(array $user_info);
+
+    /**
      * set is_online param to true
      */
     public function online();

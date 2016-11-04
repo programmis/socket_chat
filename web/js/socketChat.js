@@ -43,6 +43,7 @@ var socketChat = {
     waitingRoomTimer: null,
     sendQueueCheckTimer: null,
     autoReconnectTimer: null,
+    checkRecipientTimer: null,
 
     open: function () {
         if (socketChat.is_connect) {
@@ -119,7 +120,9 @@ var socketChat = {
     sendQueueCheck: function () {
         if (socketChat.sendQueueCheckTimer) {
             clearTimeout(socketChat.sendQueueCheckTimer);
-            if (socketChat.socket.bufferedAmount == 0) {
+            if (socketChat.socket.bufferedAmount == 0
+                && socketChat.socket.readyState == 1
+            ) {
                 var message = socketChat.sendQueue.shift();
                 if (message) {
                     socketChat.socket.send(message);

@@ -77,4 +77,19 @@ class User extends UserBase implements UserInterface
             'is_online' => $this->is_online
         ];
     }
+
+    /** @inheritdoc */
+    public function onConnect(array $user_info)
+    {
+    }
+
+    /** @inheritdoc */
+    public function onDisconnect(array $user_info)
+    {
+    }
+
+    /** @inheritdoc */
+    public function onChangeRecipient(array $user_info)
+    {
+    }
 }
