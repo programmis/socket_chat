@@ -27,6 +27,7 @@ class System implements SystemIterface
             'data' => $data
         ];
         switch ($type) {
+            case self::TYPE_USER_REMOVED:
             case self::TYPE_USER_CONNECTED:
             case self::TYPE_USER_DISCONNECTED:
                 $message = array_merge($message, [

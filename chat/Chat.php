@@ -97,6 +97,38 @@ class Chat implements ChatInterface
             $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
             $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
+
+            $this->removeUserIfNotMessageHistory($user, $room);
+        }
+    }
+
+    /**
+     * @param UserInterface $user
+     * @param string        $room
+     */
+    public function removeUserIfNotMessageHistory($user, $room)
+    {
+        $config  = $this->getConfigClass();
+        $message = $config::getMessageClass();
+        $find    = false;
+
+        /** @var User $user */
+        foreach ($this->roomUsers[$room] as $user_id => $userInfo) {
+            if ($user_id == $user->id) {
+                continue;
+            }
+            $history = $message::getHistory($user_id, $user->id, ['period' => 1]);
+            if ($history) {
+                $find = true;
+            } else {
+                $data          = System::prepareToSend(System::TYPE_USER_REMOVED, [], $user);
+                $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
+
+                $this->sendMessageToRoomUsers($user, $message_array, $room, $userInfo[UserProcessor::STRUCTURE_USER]);
+            }
+        }
+        if (!$find) {
+            unset($this->roomUsers[$room][$user->id]);
         }
     }
 

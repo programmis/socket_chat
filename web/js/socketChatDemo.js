@@ -5,6 +5,7 @@
 var user_typing_info_class = 'user_typing_info';
 var dialog_container_id = 'dialog_container';
 var users_container_id = 'users_container';
+var user_info_id = 'user_info';
 
 $(function () {
     socketChat.setMessageAreaId('socketChat');
@@ -38,8 +39,11 @@ $(function () {
     socketChat.onUserDisconnect = function (user) {
         socketChat.onUserInfo(user);
     };
+    socketChat.onUserRemoved = function (user) {
+        $('.' + user_info_id + '[id="' + user.id + '"]').remove();
+    };
     socketChat.onUserInfo = function (user) {
-        var html = "<div class='"
+        var html = "<div class='" + user_info_id + " "
             + (user.is_online ? "online" : "offline")
             + "' id='" + user.id + "'>" + user.id + " <span class='"
             + user_typing_info_class + "' id='" + user.id + "'></span></div>";
