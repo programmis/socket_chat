@@ -8,6 +8,7 @@ var socketChat = {
     socket: null,
     sendQueue: [],
     need_reconnect: false,
+    connection_type: 'ws',
 
     socket_url: '127.0.0.1:1337',
     current_user_id: 0,
@@ -15,7 +16,7 @@ var socketChat = {
     hash: '',
 
     user_typing_timeout: 3000,
-    send_queue_check_period: 500,
+    send_queue_check_period: 100,
     auto_reconnect_period: 2000,
     message_area_id: '',
     message_history_period: 7,
@@ -62,7 +63,7 @@ var socketChat = {
         socketChat.need_reconnect = true;
 
         socketChat.socket = new WebSocket(
-            "ws://" + socketChat.socket_url + '/'
+            socketChat.connection_type + "://" + socketChat.socket_url + '/'
             + socketChat.room + '/' + socketChat.hash
         );
 

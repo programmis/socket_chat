@@ -24,7 +24,7 @@ interface UserInterface
     const RIGHT_SEND_TO_ANY_USER_IN_LIST = 2;
 
     /** @return int const RIGHT_SEND_TO_ANY_USER_IN_* */
-    public function getRight();
+    public function getSendRight();
 
     /** @return array [user.id, user.id, ...] */
     public function getAccessList();

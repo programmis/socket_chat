@@ -42,4 +42,12 @@ interface ChatInterface
      * @param array $connection_info
      */
     public function dataProcessing($data, array $connection_info);
+
+    /**
+     * @param string $room
+     * @param int    $user_id
+     *
+     * @return Connection
+     */
+    public function getUserConnection($room, $user_id);
 }

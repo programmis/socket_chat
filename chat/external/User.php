@@ -23,7 +23,7 @@ class User extends UserBase implements UserInterface
     public $access_list = [];
 
     /** @inheritdoc */
-    public function getRight()
+    public function getSendRight()
     {
         return self::RIGHT_SEND_TO_ANY_USER_IN_ROOM;
     }
