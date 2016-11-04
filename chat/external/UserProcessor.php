@@ -34,7 +34,6 @@ class UserProcessor implements UserProcessorInterface
             throw new \Exception('User class must implement UserInterface');
         }
         $user->id = self::$user_cnt;
-        $user->online();
 
         self::$user_cnt++;
 

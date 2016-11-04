@@ -76,14 +76,4 @@ interface UserInterface
      * ]
      */
     public function onChangeRecipient(array $user_info);
-
-    /**
-     * set is_online param to true
-     */
-    public function online();
-
-    /**
-     * set is_online param to false
-     */
-    public function offline();
 }

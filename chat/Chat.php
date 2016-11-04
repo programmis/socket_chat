@@ -91,8 +91,6 @@ class Chat implements ChatInterface
         /** @var Connection $connection */
         $connection = $userInfo[UserProcessor::STRUCTURE_CONNECTION];
         if (!$connection->isWritable()) {
-            $user->offline();
-
             $data          = System::prepareToSend(System::TYPE_USER_DISCONNECTED, [], $user);
             $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 

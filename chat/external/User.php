@@ -55,18 +55,6 @@ class User extends UserBase implements UserInterface
     }
 
     /** @inheritdoc */
-    public function online()
-    {
-        $this->is_online = true;
-    }
-
-    /** @inheritdoc */
-    public function offline()
-    {
-        $this->is_online = false;
-    }
-
-    /** @inheritdoc */
     public function getInfo()
     {
         return [
@@ -81,11 +69,13 @@ class User extends UserBase implements UserInterface
     /** @inheritdoc */
     public function onConnect(array $user_info)
     {
+        $this->is_online = true;
     }
 
     /** @inheritdoc */
     public function onDisconnect(array $user_info)
     {
+        $this->is_online = false;
     }
 
     /** @inheritdoc */
