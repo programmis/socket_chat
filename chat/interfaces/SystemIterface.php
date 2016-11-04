@@ -14,6 +14,8 @@ namespace chat\interfaces;
  */
 interface SystemIterface
 {
+    const CONTAINER = 'data';
+
     const TYPE_USER_DISCONNECTED = 'user_disconnected';
     const TYPE_USER_CONNECTED = 'user_connected';
     const TYPE_USER_LIST = 'user_list';

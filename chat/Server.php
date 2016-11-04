@@ -171,8 +171,8 @@ class Server
     }
 
     /**
-     * @param array         $message_array
-     * @param string        $room
+     * @param array $message_array
+     * @param string $room
      * @param UserInterface $sender
      * @param UserInterface $recipient
      */
@@ -232,12 +232,15 @@ class Server
         $user    = $config::getUserClass();
 
         $default_room                       = $chat::DEFAULT_ROOM;
+        $event_container                    = $event::CONTAINER;
         $event_typing                       = $event::TYPING;
+        $event_change_recipient             = $event::CHANGE_RECIPIENT;
         $message_type_event                 = $message::TYPE_EVENT;
         $message_type_system                = $message::TYPE_SYSTEM;
         $message_type_text                  = $message::TYPE_TEXT;
         $message_container                  = $message::CONTAINER;
         $user_container                     = $user::CONTAINER;
+        $system_container                   = $system::CONTAINER;
         $system_command_get_user_list       = $system::COMMAND_GET_USER_LIST;
         $system_command_get_user_info       = $system::COMMAND_GET_USER_INFO;
         $system_command_get_message_history = $system::COMMAND_GET_MESSAGE_HISTORY;
@@ -252,12 +255,15 @@ class Server
 
         $js = <<<JS
                 socketChat.DEFAULT_ROOM = "$default_room";
+                socketChat.EVENT_CONTAINER = "$event_container";
                 socketChat.EVENT_TYPING = "$event_typing";
+                socketChat.EVENT_CHANGE_RECIPIENT = "$event_change_recipient";
                 socketChat.MESSAGE_TYPE_EVENT = "$message_type_event";
                 socketChat.MESSAGE_TYPE_SYSTEM = "$message_type_system";
                 socketChat.MESSAGE_TYPE_TEXT = "$message_type_text";
                 socketChat.MESSAGE_CONTAINER = "$message_container";
                 socketChat.USER_CONTAINER = "$user_container";
+                socketChat.SYSTEM_CONTAINER = "$system_container";
                 socketChat.SYSTEM_COMMAND_GET_USER_LIST = "$system_command_get_user_list";
                 socketChat.SYSTEM_COMMAND_GET_USER_INFO = "$system_command_get_user_info";
                 socketChat.SYSTEM_COMMAND_GET_MESSAGE_HISTORY = "$system_command_get_message_history";
@@ -266,7 +272,7 @@ class Server
                 socketChat.SYSTEM_TYPE_USER_DISCONNECTED = "$system_type_user_disconnected";
                 socketChat.SYSTEM_TYPE_USER_REMOVED = "$system_type_user_removed";
                 socketChat.SYSTEM_TYPE_USER_HISTORY = "$system_type_user_history";
-                socketChat.SYSTEM_TYPE_USER_INFO = "$system_type_user_info";
+                socketChat.SYSTEM_TYPE_USER_INFO = "$system_type_user_info";                
                 socketChat.socket_url = "$socket_url";
                 socketChat.connection_type = "$connection_type";
 JS;

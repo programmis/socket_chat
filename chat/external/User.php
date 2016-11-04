@@ -51,7 +51,7 @@ class User extends UserBase implements UserInterface
             }
         }
 
-        return false;
+        return null;
     }
 
     /** @inheritdoc */

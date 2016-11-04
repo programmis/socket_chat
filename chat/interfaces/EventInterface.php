@@ -14,6 +14,8 @@ namespace chat\interfaces;
  */
 interface EventInterface
 {
+    const CONTAINER = 'data';
+
     const TYPING = 'typing';
     const CHANGE_RECIPIENT = 'change_recipient';
 

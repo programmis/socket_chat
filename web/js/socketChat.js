@@ -18,9 +18,11 @@ var socketChat = {
     user_typing_timeout: 3000,
     send_queue_check_period: 100,
     auto_reconnect_period: 2000,
+    check_recipient_period: 100,
     message_area_id: '',
     message_history_period: 7,
     recipient_id: 0,
+    old_recipient: 0,
     send_on_enter: false,
 
     MESSAGE_TYPE_TEXT: '',
@@ -29,7 +31,10 @@ var socketChat = {
     MESSAGE_CONTAINER: '',
     USER_CONTAINER: '',
     DEFAULT_ROOM: '',
+    EVENT_CONTAINER: '',
     EVENT_TYPING: '',
+    EVENT_CHANGE_RECIPIENT: '',
+    SYSTEM_CONTAINER: '',
     SYSTEM_COMMAND_GET_USER_LIST: '',
     SYSTEM_COMMAND_GET_USER_INFO: '',
     SYSTEM_COMMAND_GET_MESSAGE_HISTORY: '',
@@ -60,6 +65,8 @@ var socketChat = {
             }, 500);
             return;
         }
+        socketChat.checkRecipientChange();
+
         socketChat.need_reconnect = true;
 
         socketChat.socket = new WebSocket(
@@ -78,6 +85,7 @@ var socketChat = {
         socketChat.socket.onclose = function (event) {
             var msg = 'Closed';
             socketChat.is_connect = false;
+            socketChat.old_recipient = 0;
 
             if (event.wasClean) {
                 msg += ' clean';
@@ -114,6 +122,25 @@ var socketChat = {
                     break;
             }
         };
+    },
+    checkRecipientChange: function () {
+        if (socketChat.checkRecipientTimer) {
+            clearTimeout(socketChat.checkRecipientTimer);
+        }
+        if (socketChat.recipient_id != socketChat.old_recipient) {
+            socketChat.sendEvent(
+                socketChat.EVENT_CHANGE_RECIPIENT,
+                {
+                    user: {
+                        id: socketChat.recipient_id
+                    }
+                }
+            );
+            socketChat.old_recipient = socketChat.recipient_id;
+        }
+        socketChat.checkRecipientTimer = setTimeout(function () {
+            socketChat.checkRecipientChange();
+        }, socketChat.check_recipient_period);
     },
     addToSendQueue: function (message) {
         socketChat.sendQueue.push(message);
@@ -274,18 +301,18 @@ var socketChat = {
     },
     sendSystem: function (system, data) {
         var system_data = {
-            system: system,
-            data: data
+            system: system
         };
+        system_data[socketChat.SYSTEM_CONTAINER] = data;
         socketChat.addToSendQueue(
             socketChat.prepareMessage(socketChat.MESSAGE_TYPE_SYSTEM, system_data)
         );
     },
     sendEvent: function (event, data) {
         var event_data = {
-            event: event,
-            data: data
+            event: event
         };
+        event_data[socketChat.EVENT_CONTAINER] = data;
         socketChat.addToSendQueue(
             socketChat.prepareMessage(socketChat.MESSAGE_TYPE_EVENT, event_data)
         );

@@ -98,10 +98,7 @@ class Chat implements ChatInterface
 
             $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
 
-            $config = $this->getConfigClass();
-            $userClass = $config::getUserClass();
-
-            $userClass->onDisconnect($userInfo);
+            $user->onDisconnect($userInfo);
         }
     }
 
@@ -114,19 +111,16 @@ class Chat implements ChatInterface
 
         if ($user) {
             $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_CONNECTION] = $conn;
-            $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_USER] = $user;
-            $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_INFO] = $connection_info;
-            $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_RECIPIENT] = null;
+            $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_USER]       = $user;
+            $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_INFO]       = $connection_info;
+            $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_RECIPIENT]  = null;
 
-            $data = System::prepareToSend(System::TYPE_USER_CONNECTED, [], $user);
+            $data          = System::prepareToSend(System::TYPE_USER_CONNECTED, [], $user);
             $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
             $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
 
-            $config = $this->getConfigClass();
-            $userClass = $config::getUserClass();
-
-            $userClass->onConnect($this->roomUsers[$room][$user->id]);
+            $user->onConnect($this->roomUsers[$room][$user->id]);
         }
 
         return $user;
@@ -158,7 +152,7 @@ class Chat implements ChatInterface
 
     /**
      * @param string $room
-     * @param int    $user_id
+     * @param int $user_id
      */
     public function closeUserConnection($room, $user_id)
     {
@@ -200,8 +194,24 @@ class Chat implements ChatInterface
     }
 
     /**
-     * @param array         $data
-     * @param string        $room
+     * @param int $for_user_id
+     * @param string $room
+     * @param int $recipient_id
+     */
+    protected function changeRecipient($for_user_id, $room, $recipient_id)
+    {
+        /** @var User $user */
+        $user = $this->roomUsers[$room][$for_user_id][UserProcessor::STRUCTURE_USER];
+        $recipient = $user::findOne($recipient_id);
+
+        $this->roomUsers[$room][$for_user_id][UserProcessor::STRUCTURE_RECIPIENT] = $recipient;
+
+        $user->onChangeRecipient($this->roomUsers[$room][$for_user_id]);
+    }
+
+    /**
+     * @param array $data
+     * @param string $room
      * @param UserInterface $sender
      */
     protected function eventReceived($data, $room, UserInterface $sender)
@@ -214,6 +224,12 @@ class Chat implements ChatInterface
             case Event::CHANGE_RECIPIENT:
                 $event_data = [];
                 $event_type = false;
+                /** @var User $sender */
+                $this->changeRecipient(
+                    $sender->id,
+                    $room,
+                    $data[Event::CONTAINER][User::CONTAINER]['id']
+                );
                 break;
             default:
                 list($event_type, $event_data) = $this->messageProcessor->event($data, $room, $sender);
@@ -229,11 +245,11 @@ class Chat implements ChatInterface
     }
 
     /**
-     * @param UserInterface      $sender
-     * @param array              $message_array (result of function Chat::prepareDataToSend)
-     * @param string             $room
+     * @param UserInterface $sender
+     * @param array $message_array (result of function Chat::prepareDataToSend)
+     * @param string $room
      * @param UserInterface|null $user
-     * @param bool               $exclude
+     * @param bool $exclude
      */
     protected function sendMessageToRoomUsers(
         $sender,
@@ -270,8 +286,8 @@ class Chat implements ChatInterface
     }
 
     /**
-     * @param array         $inner_data
-     * @param string        $room
+     * @param array $inner_data
+     * @param string $room
      * @param UserInterface $sender
      *
      * @throws \Exception
@@ -304,21 +320,21 @@ class Chat implements ChatInterface
 
     /**
      * @param string $message_type
-     * @param array  $data
+     * @param array $data
      *
      * @return array
      */
     protected function prepareDataToSend($message_type, $data)
     {
         return [
-            'type'             => $message_type,
+            'type' => $message_type,
             Message::CONTAINER => $data
         ];
     }
 
     /**
      * @param string $room
-     * @param int    $for_user_id
+     * @param int $for_user_id
      *
      * @return array
      */
@@ -339,8 +355,8 @@ class Chat implements ChatInterface
     }
 
     /**
-     * @param array         $data
-     * @param string        $room
+     * @param array $data
+     * @param string $room
      * @param UserInterface $sender
      */
     protected function systemMessageReceived($data, $room, UserInterface $sender)
@@ -367,8 +383,8 @@ class Chat implements ChatInterface
                 $message     = $config::getMessageClass();
                 $system_data = $message::getHistory(
                     $sender->id,
-                    $data['data']['with_user_id'],
-                    ['period' => $data['data']['period']]
+                    $data[System::CONTAINER]['with_user_id'],
+                    ['period' => $data[System::CONTAINER]['period']]
                 );
                 $system_type = System::TYPE_USER_HISTORY;
                 break;
