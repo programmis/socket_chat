@@ -62,6 +62,21 @@ $server->tick(); //in your daemon loop method
 and
 [how to connect this chat to YII2 framework](https://github.com/programmis/yii2-socket-chat)
 
+**popular methods**
+```php
+UserProcessor:createUser    //maybe init user from your database by $connection_info data
+User:findOne                //find and return user in your database by user id
+User:getAccessList          //return user ids list of access to send messages
+User:getSendRight           //return user right for send messages
+User:getInfo                //return array with user info
+User:onConnect              //called if user connect
+User:onDisconnect           //called if user disconnect
+User:onChangeRecipient      //called if user change recipient
+Message:getHistory          //find and return users messages in your database
+Message:beforeSend          //called before send message
+Message:afterSend           //called after send message
+Chat:sendMessageText        //you may send any text message to user
+```
 **Client side**
 
 ```html
