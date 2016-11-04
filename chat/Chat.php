@@ -91,12 +91,12 @@ class Chat implements ChatInterface
         /** @var Connection $connection */
         $connection = $userInfo[UserProcessor::STRUCTURE_CONNECTION];
         if (!$connection->isWritable()) {
+            $user->onDisconnect($userInfo);
+
             $data          = System::prepareToSend(System::TYPE_USER_DISCONNECTED, [], $user);
             $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
             $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
-
-            $user->onDisconnect($userInfo);
         }
     }
 
@@ -113,12 +113,12 @@ class Chat implements ChatInterface
             $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_INFO]       = $connection_info;
             $this->roomUsers[$room][$user->id][UserProcessor::STRUCTURE_RECIPIENT]  = null;
 
+            $user->onConnect($this->roomUsers[$room][$user->id]);
+
             $data          = System::prepareToSend(System::TYPE_USER_CONNECTED, [], $user);
             $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
             $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
-
-            $user->onConnect($this->roomUsers[$room][$user->id]);
         } else {
             $conn->close();
         }
