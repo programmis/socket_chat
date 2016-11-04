@@ -9,6 +9,7 @@
 namespace chat\libs;
 
 use chat\Chat;
+use chat\interfaces\SecurityInterface;
 use React\Socket\Connection;
 
 /**
@@ -16,25 +17,13 @@ use React\Socket\Connection;
  *
  * @package chat\libs
  */
-class Security
+class Security implements SecurityInterface
 {
-    const FRAME_TYPE_TEXT = 'text';
-    const FRAME_TYPE_BINARY = 'binary';
-    const FRAME_TYPE_CLOSE = 'close';
-    const FRAME_TYPE_PING = 'ping';
-    const FRAME_TYPE_PONG = 'pong';
-
-    const GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
-
-    /**
-     * @param Connection $connect
-     *
-     * @return array|bool
-     */
+    /** @inheritdoc */
     public static function handshake(Connection $connect)
     {
         sleep(1);
-        $info = array();
+        $info   = [];
         $stream = $connect->getBuffer()->stream;
 
         while ($line = rtrim(fgets($stream))) {
@@ -46,10 +35,9 @@ class Security
             } else {
                 preg_match('|GET \/(.*)\/(.*) HTTP.+$|', $line, $matches);
 
-                $room = preg_replace("/[^a-zA-Z0-9]/", "", $matches[1] ?? '');
-                $room = $room ? $room : Chat::DEFAULT_ROOM;
-                $info['room'] = strtolower($room);
-                $info['hash'] = preg_replace("/[^a-zA-Z0-9]/", "", $matches[2] ?? '');
+                $room         = self::parseRoomString($matches[1]);
+                $info['room'] = $room ? $room : Chat::DEFAULT_ROOM;
+                $info['hash'] = self::parseHashString($matches[2]);
             }
         }
         if (empty($info['Sec-WebSocket-Key'])) {
@@ -76,16 +64,24 @@ class Security
         return $info;
     }
 
-    /**
-     * @param        $payload
-     * @param string $type
-     * @param bool $masked
-     *
-     * @return string
-     */
+    /** @inheritdoc */
+    public static function parseRoomString($room)
+    {
+        return strtolower(
+            preg_replace("/[^a-zA-Z0-9\-\_]/", "", $room ?? '')
+        );
+    }
+
+    /** @inheritdoc */
+    public static function parseHashString($hash)
+    {
+        return preg_replace("/[^a-zA-Z0-9\-\_]/", "", $hash ?? '');
+    }
+
+    /** @inheritdoc */
     public static function encode($payload, $type = 'text', $masked = false)
     {
-        $frameHead = array();
+        $frameHead     = [];
         $payloadLength = strlen($payload);
 
         switch ($type) {
@@ -109,19 +105,19 @@ class Security
         // set mask and payload length (using 1, 3 or 9 bytes)
         if ($payloadLength > 65535) {
             $payloadLengthBin = str_split(sprintf('%064b', $payloadLength), 8);
-            $frameHead[1] = ($masked === true) ? 255 : 127;
+            $frameHead[1]     = ($masked === true) ? 255 : 127;
             for ($i = 0; $i < 8; $i++) {
                 $frameHead[$i + 2] = bindec($payloadLengthBin[$i]);
             }
             // most significant bit MUST be 0
             if ($frameHead[2] > 127) {
-                return array('type' => '', 'payload' => '', 'error' => 'frame too large (1004)');
+                return ['type' => '', 'payload' => '', 'error' => 'frame too large (1004)'];
             }
         } elseif ($payloadLength > 125) {
             $payloadLengthBin = str_split(sprintf('%016b', $payloadLength), 8);
-            $frameHead[1] = ($masked === true) ? 254 : 126;
-            $frameHead[2] = bindec($payloadLengthBin[0]);
-            $frameHead[3] = bindec($payloadLengthBin[1]);
+            $frameHead[1]     = ($masked === true) ? 254 : 126;
+            $frameHead[2]     = bindec($payloadLengthBin[0]);
+            $frameHead[3]     = bindec($payloadLengthBin[1]);
         } else {
             $frameHead[1] = ($masked === true) ? $payloadLength + 128 : $payloadLength;
         }
@@ -130,7 +126,7 @@ class Security
         foreach (array_keys($frameHead) as $i) {
             $frameHead[$i] = chr($frameHead[$i]);
         }
-        $mask = array();
+        $mask = [];
 
         if ($masked === true) {
             // generate a random mask:
@@ -150,26 +146,22 @@ class Security
         return $frame;
     }
 
-    /**
-     * @param $data
-     *
-     * @return array|bool
-     */
+    /** @inheritdoc */
     public static function decode($data)
     {
         $unmaskedPayload = '';
-        $decodedData = array();
+        $decodedData     = [];
 
         // estimate frame type:
-        $firstByteBinary = sprintf('%08b', ord($data[0]));
+        $firstByteBinary  = sprintf('%08b', ord($data[0]));
         $secondByteBinary = sprintf('%08b', ord($data[1]));
-        $opcode = bindec(substr($firstByteBinary, 4, 4));
-        $isMasked = ($secondByteBinary[0] == '1') ? true : false;
-        $payloadLength = ord($data[1]) & 127;
+        $opcode           = bindec(substr($firstByteBinary, 4, 4));
+        $isMasked         = ($secondByteBinary[0] == '1') ? true : false;
+        $payloadLength    = ord($data[1]) & 127;
 
         // unmasked frame is received:
         if (!$isMasked) {
-            return array('type' => '', 'payload' => '', 'error' => 'protocol error (1002)');
+            return ['type' => '', 'payload' => '', 'error' => 'protocol error (1002)'];
         }
 
         switch ($opcode) {
@@ -189,26 +181,26 @@ class Security
                 $decodedData['type'] = self::FRAME_TYPE_PONG;
                 break;
             default:
-                return array('type' => '', 'payload' => '', 'error' => 'unknown opcode (1003)');
+                return ['type' => '', 'payload' => '', 'error' => 'unknown opcode (1003)'];
         }
 
         if ($payloadLength === 126) {
-            $mask = substr($data, 4, 4);
+            $mask          = substr($data, 4, 4);
             $payloadOffset = 8;
-            $dataLength = bindec(sprintf('%08b', ord($data[2])) . sprintf('%08b', ord($data[3]))) + $payloadOffset;
+            $dataLength    = bindec(sprintf('%08b', ord($data[2])) . sprintf('%08b', ord($data[3]))) + $payloadOffset;
         } elseif ($payloadLength === 127) {
-            $mask = substr($data, 10, 4);
+            $mask          = substr($data, 10, 4);
             $payloadOffset = 14;
-            $tmp = '';
+            $tmp           = '';
             for ($i = 0; $i < 8; $i++) {
                 $tmp .= sprintf('%08b', ord($data[$i + 2]));
             }
             $dataLength = bindec($tmp) + $payloadOffset;
             unset($tmp);
         } else {
-            $mask = substr($data, 2, 4);
+            $mask          = substr($data, 2, 4);
             $payloadOffset = 6;
-            $dataLength = $payloadLength + $payloadOffset;
+            $dataLength    = $payloadLength + $payloadOffset;
         }
 
         /**
@@ -229,7 +221,7 @@ class Security
             }
             $decodedData['payload'] = $unmaskedPayload;
         } else {
-            $payloadOffset = $payloadOffset - 4;
+            $payloadOffset          = $payloadOffset - 4;
             $decodedData['payload'] = substr($data, $payloadOffset);
         }
 

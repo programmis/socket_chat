@@ -16,6 +16,7 @@ use chat\external\types\System;
 use chat\external\types\Text;
 use chat\external\User;
 use chat\external\UserProcessor;
+use chat\libs\Security;
 use logger\Logger;
 use Psr\Log\LoggerInterface;
 
@@ -30,6 +31,7 @@ interface ConfigInterface
     const CHAT_CLASS = Chat::class;
     const LOGGER_CLASS = Logger::class;
     const SYSTEM_CLASS = System::class;
+    const SECURITY_CLASS = Security::class;
     const TEXT_CLASS = Text::class;
     const EVENT_CLASS = Event::class;
     const MESSAGE_PROCESSOR_CLASS = MessageProcessor::class;
@@ -61,4 +63,7 @@ interface ConfigInterface
 
     /** @return TextInterface */
     public static function getTextClass();
+
+    /** @return SecurityInterface */
+    public static function getSecurityClass();
 }

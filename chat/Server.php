@@ -11,9 +11,9 @@ namespace chat;
 use chat\external\User;
 use chat\interfaces\ChatInterface;
 use chat\interfaces\ConfigInterface;
+use chat\interfaces\SecurityInterface;
 use chat\interfaces\UserInterface;
 use chat\libs\Config;
-use chat\libs\Security;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use React\EventLoop\Factory;
@@ -33,6 +33,8 @@ class Server
     private static $logger;
     /** @var ConfigInterface $config */
     private static $config;
+    /** @var  SecurityInterface $security */
+    public static $security;
     /** @var int $port */
     public static $port = 1337;
     /** @var string $listen_host */
@@ -93,6 +95,19 @@ class Server
         $this->chat = $chat;
     }
 
+    private function initSecurity()
+    {
+        $config = self::$config;
+
+        /** @var Chat $chat */
+        $security = $config::getSecurityClass();
+        $chat     = new $security;
+        if (!($chat instanceof SecurityInterface)) {
+            throw new \Exception('Security class must implement SecurityInterface');
+        }
+        self::$security = $security;
+    }
+
     /**
      * Server constructor.
      */
@@ -101,11 +116,14 @@ class Server
         $this->initConfig();
         $this->initLogger();
         $this->initChat();
+        $this->initSecurity();
 
         $this->loop   = Factory::create();
         $this->socket = new \React\Socket\Server($this->loop);
         $this->socket->on('connection', function (Connection $conn) {
-            $info = Security::handshake($conn);
+            $security = self::$security;
+
+            $info = $security::handshake($conn);
             if (!$info) {
                 $conn->close();
 
@@ -116,7 +134,9 @@ class Server
             $info[User::CONTAINER] = $this->chat->createUser($conn, $info);
 
             $conn->on('data', function ($data) use ($info) {
-                $data = Security::decode($data);
+                $security = self::$security;
+
+                $data = $security::decode($data);
 
                 self::log('data received: ' . print_r($data, true), LogLevel::DEBUG);
                 try {
@@ -171,8 +191,8 @@ class Server
     }
 
     /**
-     * @param array $message_array
-     * @param string $room
+     * @param array         $message_array
+     * @param string        $room
      * @param UserInterface $sender
      * @param UserInterface $recipient
      */
@@ -199,8 +219,9 @@ class Server
 
             return;
         }
+        $security     = self::$security;
         $message_json = json_encode($message_array);
-        $conn->write(Security::encode($message_json));
+        $conn->write($security::encode($message_json));
         $messageClass::afterSend($sender->id, $recipient->id, $message_array);
         self::log('Send message: ' . $message_json);
     }
@@ -210,7 +231,7 @@ class Server
      * @param       $message
      * @param array $context
      */
-    public static function log($message, $level = LogLevel::INFO, array $context = array())
+    public static function log($message, $level = LogLevel::INFO, array $context = [])
     {
         if (!self::$logger) {
             $config       = self::getConfigClass();

@@ -87,4 +87,12 @@ abstract class ConfigBase implements ConfigInterface
 
         return $config::EVENT_CLASS;
     }
+
+    /** @inheritdoc */
+    public static function getSecurityClass()
+    {
+        $config = self::class;
+
+        return $config::SECURITY_CLASS;
+    }
 }
