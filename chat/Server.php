@@ -60,6 +60,14 @@ class Server
         return Config::class;
     }
 
+    /**
+     * @return Server
+     */
+    public static function getInstance()
+    {
+        return self::$instance;
+    }
+
     private function initConfig()
     {
         $config = static::getConfigClass();
