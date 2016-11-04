@@ -114,7 +114,12 @@ class Chat implements ChatInterface
 
         /** @var User $user */
         foreach ($this->roomUsers[$room] as $user_id => $userInfo) {
-            if ($user_id == $user->id) {
+            if ($user_id == $user->id
+                || (
+                    $user->getSendRight() == User::RIGHT_SEND_TO_ANY_USER_IN_LIST
+                    && !in_array($user_id, $user->getAccessList())
+                )
+            ) {
                 continue;
             }
             $history = $message::getHistory($user_id, $user->id, ['period' => 1]);
