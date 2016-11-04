@@ -246,13 +246,7 @@ class Chat implements ChatInterface
         $this->sendMessageToRoomUsers($sender, $message_array, $room, $sender, true);
     }
 
-    /**
-     * @param UserInterface $sender
-     * @param array $message_array (result of function Chat::prepareDataToSend)
-     * @param string $room
-     * @param UserInterface|null $user
-     * @param bool $exclude
-     */
+    /** @inheritdoc */
     public function sendMessageToRoomUsers(
         $sender,
         $message_array,
@@ -320,12 +314,7 @@ class Chat implements ChatInterface
         }
     }
 
-    /**
-     * @param string $message_type
-     * @param array $data
-     *
-     * @return array
-     */
+    /** @inheritdoc */
     public function prepareDataToSend($message_type, $data)
     {
         return [
