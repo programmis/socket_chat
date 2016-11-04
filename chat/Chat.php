@@ -253,7 +253,7 @@ class Chat implements ChatInterface
      * @param UserInterface|null $user
      * @param bool $exclude
      */
-    protected function sendMessageToRoomUsers(
+    public function sendMessageToRoomUsers(
         $sender,
         $message_array,
         string $room,
@@ -326,7 +326,7 @@ class Chat implements ChatInterface
      *
      * @return array
      */
-    protected function prepareDataToSend($message_type, $data)
+    public function prepareDataToSend($message_type, $data)
     {
         return [
             'type' => $message_type,
