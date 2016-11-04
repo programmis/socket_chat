@@ -86,6 +86,7 @@ var socketChat = {
             var msg = 'Closed';
             socketChat.is_connect = false;
             socketChat.old_recipient = 0;
+            socketChat.sendQueue = [];
 
             if (event.wasClean) {
                 msg += ' clean';
