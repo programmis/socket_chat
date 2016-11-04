@@ -17,46 +17,50 @@ php composer.phar require programmis/socket-chat
 
 **Starting chat server**
 
-<pre>
+```php
 $loader = require __DIR__ . '/vendor/autoload.php';
 
 $server = new chat\Server();
 $server->start();
-</pre>
+```
 
 **or in your project**
-<pre>
+```php
 class Server extends \chat\Server
 {
     /** @inheritdoc */
     public static function getConfigClass()
     {
-        return "You're config class implemented 
+        return "Your config class implemented 
             from \chat\interfaces\ConfigInterface
             or extend from \chat\libs\Config";
         //return MyConfig::class;
     }
 }
+```
 
-and in you're config class
+and in your config class
 
-class Config extends \chat\libs\Config
+```php
+class MyConfig extends \chat\libs\Config
 {
-    you can override any chat class
+    //you can override any chat class
 }
+```
 
 and to start 
 
-$server = new yor're\project\namespace\Server();
+```php
+$server = new your\project\namespace\Server();
 
 $server->start();
-or for you daemon
-$server->tick(); //in you're loop
+//or for you daemon
+$server->tick(); //in your daemon loop method
+```
 
 [simple daemon provider](https://github.com/programmis/daemon-provider)
+and
 [how to connect this chat to YII2 framework](https://github.com/programmis/yii2-socket-chat)
-
-</pre>
 
 **Client side**
 
@@ -74,7 +78,7 @@ _Init java constants_
 ```
 
 _Settings_
-<pre>
+```javascript
 socketChat.connection_type = "Maybe 'ws' or 'wss'"
 socketChat.current_user_id = "Current user id in chat";
 socketChat.socket_url = "You're server address : and port";
@@ -84,33 +88,33 @@ socketChat.room = "Chat room name is required fill";
 socketChat.hash = "You're secret hash for processing with UserProcessor";
 socketChat.user_typing_timeout = "For auto disable user typing status";
 socketChat.message_history_period = "For default request message history";
-</pre>
+```
 
 _Functions_
-<pre>
-socketChat.open(); - open connect with server
-socketChat.close(); - close connect with server
-socketChat.setMessageAreaId(id); - set textarea id for messages
-socketChat.send(); - send message from message_area to socketChat.recipient_id 
-socketChat.getUserList(); - get all users in current room
-socketChat.getUserInfo(user_id); - get info about user
-socketChat.getMessageHistory(with_user_id, period); - get all messages for current user and with_user_id by period
-</pre>
+```javascript
+socketChat.open();                                  //open connect with server
+socketChat.close();                                 //close connect with server
+socketChat.setMessageAreaId(id);                    //set textarea id for messages
+socketChat.send();                                  //send message from message_area to socketChat.recipient_id 
+socketChat.getUserList();                           //get all users in current room
+socketChat.getUserInfo(user_id);                    //get info about user
+socketChat.getMessageHistory(with_user_id, period); //get all messages for current user and with_user_id by period
+```
 
 _Events_
-<pre>
-socketChat.onConnect - called if chat connected to server
-socketChat.onDisconnect - call if chat disconnected with server
-socketChat.onMessageRender - called if render message with "message" in parameter 
-socketChat.onMessageListRender - called if render message list with "message_list" in parameter
-socketChat.onUserConnect - called if user connect to chat with "user" in parameter
-socketChat.onUserDisconnect - called if user disconnect from chat with "user" in parameter
-socketChat.onUserRemoved - called if user removed from chat with "user" in parameter
-socketChat.onUserInfo - called if received user info with "user" in parameter
-socketChat.onUserList - called if user list received with "user_list" in parameter
-socketChat.onUserTypingStart - called if user start typing with "user_id" in parameter
-socketChat.onUserTypingEnd - called if user end typing with "user_id" in parameter
-</pre>
+```javascript
+socketChat.onConnect            //called if chat connected to server
+socketChat.onDisconnect         //call if chat disconnected with server
+socketChat.onMessageRender      //called if render message with "message" in parameter 
+socketChat.onMessageListRender  //called if render message list with "message_list" in parameter
+socketChat.onUserConnect        //called if user connect to chat with "user" in parameter
+socketChat.onUserDisconnect     //called if user disconnect from chat with "user" in parameter
+socketChat.onUserRemoved        //called if user removed from chat with "user" in parameter
+socketChat.onUserInfo           //called if received user info with "user" in parameter
+socketChat.onUserList           //called if user list received with "user_list" in parameter
+socketChat.onUserTypingStart    //called if user start typing with "user_id" in parameter
+socketChat.onUserTypingEnd      //called if user end typing with "user_id" in parameter
+```
 
 **For example see index.php and socketChatDemo.js files**
 
