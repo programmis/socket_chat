@@ -121,6 +121,8 @@ class Chat implements ChatInterface
             $this->sendMessageToRoomUsers($user, $message_array, $room, $user, true);
 
             $user->onConnect($this->roomUsers[$room][$user->id]);
+        } else {
+            $conn->close();
         }
 
         return $user;
