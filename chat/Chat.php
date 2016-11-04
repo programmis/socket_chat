@@ -154,7 +154,7 @@ class Chat implements ChatInterface
 
     /**
      * @param string $room
-     * @param int $user_id
+     * @param int    $user_id
      */
     public function closeUserConnection($room, $user_id)
     {
@@ -196,14 +196,14 @@ class Chat implements ChatInterface
     }
 
     /**
-     * @param int $for_user_id
+     * @param int    $for_user_id
      * @param string $room
-     * @param int $recipient_id
+     * @param int    $recipient_id
      */
     protected function changeRecipient($for_user_id, $room, $recipient_id)
     {
         /** @var User $user */
-        $user = $this->roomUsers[$room][$for_user_id][UserProcessor::STRUCTURE_USER];
+        $user      = $this->roomUsers[$room][$for_user_id][UserProcessor::STRUCTURE_USER];
         $recipient = $user::findOne($recipient_id);
 
         $this->roomUsers[$room][$for_user_id][UserProcessor::STRUCTURE_RECIPIENT] = $recipient;
@@ -212,8 +212,8 @@ class Chat implements ChatInterface
     }
 
     /**
-     * @param array $data
-     * @param string $room
+     * @param array         $data
+     * @param string        $room
      * @param UserInterface $sender
      */
     protected function eventReceived($data, $room, UserInterface $sender)
@@ -246,8 +246,14 @@ class Chat implements ChatInterface
         $this->sendMessageToRoomUsers($sender, $message_array, $room, $sender, true);
     }
 
-    /** @inheritdoc */
-    public function sendMessageToRoomUsers(
+    /**
+     * @param UserInterface      $sender
+     * @param array              $message_array (result of function Chat::prepareDataToSend)
+     * @param string             $room
+     * @param UserInterface|null $user
+     * @param bool               $exclude
+     */
+    protected function sendMessageToRoomUsers(
         $sender,
         $message_array,
         string $room,
@@ -281,9 +287,20 @@ class Chat implements ChatInterface
         return $this->roomUsers[$room][$user_id][UserProcessor::STRUCTURE_CONNECTION] ?? null;
     }
 
+    /** @inheritdoc */
+    public function sendMessageText($sender, $recipient, $room, $message)
+    {
+        $config        = $this->getConfigClass();
+        $text          = $config::getTextClass();
+        $data          = $text::prepareToSend($sender, $message);
+        $message_array = $this->prepareDataToSend(Message::TYPE_TEXT, $data);
+
+        $this->sendMessageToRoomUsers($sender, $message_array, $room, $recipient);
+    }
+
     /**
-     * @param array $inner_data
-     * @param string $room
+     * @param array         $inner_data
+     * @param string        $room
      * @param UserInterface $sender
      *
      * @throws \Exception
@@ -314,18 +331,23 @@ class Chat implements ChatInterface
         }
     }
 
-    /** @inheritdoc */
-    public function prepareDataToSend($message_type, $data)
+    /**
+     * @param string $message_type
+     * @param array  $data
+     *
+     * @return array
+     */
+    protected function prepareDataToSend($message_type, $data)
     {
         return [
-            'type' => $message_type,
+            'type'             => $message_type,
             Message::CONTAINER => $data
         ];
     }
 
     /**
      * @param string $room
-     * @param int $for_user_id
+     * @param int    $for_user_id
      *
      * @return array
      */
@@ -346,8 +368,8 @@ class Chat implements ChatInterface
     }
 
     /**
-     * @param array $data
-     * @param string $room
+     * @param array         $data
+     * @param string        $room
      * @param UserInterface $sender
      */
     protected function systemMessageReceived($data, $room, UserInterface $sender)

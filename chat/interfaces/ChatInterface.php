@@ -53,24 +53,9 @@ interface ChatInterface
 
     /**
      * @param UserInterface $sender
-     * @param array $message_array (result of function Chat::prepareDataToSend)
+     * @param UserInterface $recipient
      * @param string $room
-     * @param UserInterface|null $user
-     * @param bool $exclude
+     * @param string $message
      */
-    public function sendMessageToRoomUsers(
-        $sender,
-        $message_array,
-        string $room,
-        UserInterface $user = null,
-        $exclude = false
-    );
-
-    /**
-     * @param string $message_type
-     * @param array $data
-     *
-     * @return array
-     */
-    public function prepareDataToSend($message_type, $data);
+    public function sendMessageText($sender, $recipient, $room, $message);
 }
