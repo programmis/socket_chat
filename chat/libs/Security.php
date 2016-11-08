@@ -34,6 +34,9 @@ class Security implements SecurityInterface
                 $info[$matches[1]] = $matches[2];
             } else {
                 preg_match('|GET \/(.*)\/(.*) HTTP.+$|', $line, $matches);
+                if (!isset($matches[1], $matches[2])) {
+                    continue;
+                }
 
                 $room         = self::parseRoomString($matches[1]);
                 $info['room'] = $room ? $room : Chat::DEFAULT_ROOM;
