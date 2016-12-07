@@ -254,11 +254,11 @@ var socketChat = {
             case socketChat.SYSTEM_TYPE_USER_INFO:
                 socketChat.onUserInfo(system.user);
                 break;
-            case socketChat.SYSTEM_TYPE_USER_HISTORY:
-                socketChat.onMessageListRender(system.data);
-                break;
             case socketChat.SYSTEM_TYPE_USER_ABOUT_ME_INFO:
                 socketChat.onAboutMeInfo(system.user);
+                break;
+            case socketChat.SYSTEM_TYPE_USER_HISTORY:
+                socketChat.onMessageListRender(system.data);
                 break;
         }
     },

@@ -410,6 +410,7 @@ class Chat implements ChatInterface
     protected function systemMessageReceived($data, $room, UserInterface $sender)
     {
         $config = $this->getConfigClass();
+        $user   = null;
 
         /** @var User $sender */
         switch ($data[Message::TYPE_SYSTEM]) {
@@ -418,17 +419,14 @@ class Chat implements ChatInterface
                 $system_type = System::TYPE_USER_LIST;
                 break;
             case System::COMMAND_GET_INFO_ABOUT_ME:
-                $system_data = [User::CONTAINER => $sender->getInfo()];
+                $system_data = [];
                 $system_type = System::TYPE_USER_ABOUT_ME_INFO;
+                $user        = $sender;
                 break;
             case System::COMMAND_GET_USER_INFO:
                 $user = $config::getUserClass();
                 $user = $user::findOne($data[User::CONTAINER]['id'] ?? 0);
-                if ($user) {
-                    $system_data = [User::CONTAINER => $user->getInfo()];
-                } else {
-                    $system_data = [];
-                }
+                $system_data = [];
                 $system_type = System::TYPE_USER_INFO;
                 break;
             case System::COMMAND_GET_MESSAGE_HISTORY:
@@ -451,7 +449,7 @@ class Chat implements ChatInterface
         if (!$system_type) {
             return;
         }
-        $data          = System::prepareToSend($system_type, $system_data);
+        $data          = System::prepareToSend($system_type, $system_data, $user);
         $message_array = $this->prepareDataToSend(Message::TYPE_SYSTEM, $data);
 
         $this->sendMessageToRoomUsers($sender, $message_array, $room, $sender);

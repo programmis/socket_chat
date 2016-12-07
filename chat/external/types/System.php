@@ -14,6 +14,7 @@ use chat\interfaces\UserInterface;
 
 /**
  * Class System
+ *
  * @package chat\libs
  */
 class System implements SystemIterface
@@ -24,9 +25,11 @@ class System implements SystemIterface
         /** @var User $user */
         $message = [
             'system' => $type,
-            'data' => $data
+            'data'   => $data
         ];
         switch ($type) {
+            case self::TYPE_USER_INFO:
+            case self::TYPE_USER_ABOUT_ME_INFO:
             case self::TYPE_USER_REMOVED:
             case self::TYPE_USER_CONNECTED:
             case self::TYPE_USER_DISCONNECTED:
