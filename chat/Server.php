@@ -272,6 +272,7 @@ class Server
         $system_container                   = $system::CONTAINER;
         $system_command_get_user_list       = $system::COMMAND_GET_USER_LIST;
         $system_command_get_user_info       = $system::COMMAND_GET_USER_INFO;
+        $system_command_get_info_about_me   = $system::COMMAND_GET_INFO_ABOUT_ME;
         $system_command_get_message_history = $system::COMMAND_GET_MESSAGE_HISTORY;
         $system_type_user_list              = $system::TYPE_USER_LIST;
         $system_type_user_connected         = $system::TYPE_USER_CONNECTED;
@@ -279,6 +280,7 @@ class Server
         $system_type_user_removed           = $system::TYPE_USER_REMOVED;
         $system_type_user_history           = $system::TYPE_USER_HISTORY;
         $system_type_user_info              = $system::TYPE_USER_INFO;
+        $system_type_user_about_me_info     = $system::TYPE_USER_ABOUT_ME_INFO;
         $socket_url                         = static::$server_host . ':' . static::$port;
         $connection_type                    = static::$connection_type;
 
@@ -295,13 +297,15 @@ class Server
                 socketChat.SYSTEM_CONTAINER = "$system_container";
                 socketChat.SYSTEM_COMMAND_GET_USER_LIST = "$system_command_get_user_list";
                 socketChat.SYSTEM_COMMAND_GET_USER_INFO = "$system_command_get_user_info";
+                socketChat.SYSTEM_COMMAND_GET_INFO_ABOUT_ME = "$system_command_get_info_about_me";
                 socketChat.SYSTEM_COMMAND_GET_MESSAGE_HISTORY = "$system_command_get_message_history";
                 socketChat.SYSTEM_TYPE_USER_CONNECTED = "$system_type_user_connected";
                 socketChat.SYSTEM_TYPE_USER_LIST = "$system_type_user_list";
                 socketChat.SYSTEM_TYPE_USER_DISCONNECTED = "$system_type_user_disconnected";
                 socketChat.SYSTEM_TYPE_USER_REMOVED = "$system_type_user_removed";
                 socketChat.SYSTEM_TYPE_USER_HISTORY = "$system_type_user_history";
-                socketChat.SYSTEM_TYPE_USER_INFO = "$system_type_user_info";                
+                socketChat.SYSTEM_TYPE_USER_INFO = "$system_type_user_info";            
+                socketChat.SYSTEM_TYPE_USER_ABOUT_ME_INFO = "$system_type_user_about_me_info";    
                 socketChat.socket_url = "$socket_url";
                 socketChat.connection_type = "$connection_type";
 JS;

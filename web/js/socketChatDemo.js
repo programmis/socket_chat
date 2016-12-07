@@ -57,6 +57,9 @@ $(function () {
             $(userCon).append(html);
         }
     };
+    socketChat.onAboutMeInfo = function (user) {
+        socketChat.current_user_id = user.id;
+    };
     socketChat.onUserTypingStart = function (user_id) {
         $('.' + user_typing_info_class + '[id="' + user_id + '"]').html('typing...');
     };

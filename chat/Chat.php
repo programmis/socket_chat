@@ -417,6 +417,10 @@ class Chat implements ChatInterface
                 $system_data = $this->getRoomUserList($room, $sender->id);
                 $system_type = System::TYPE_USER_LIST;
                 break;
+            case System::COMMAND_GET_INFO_ABOUT_ME:
+                $system_data = [User::CONTAINER => $sender->getInfo()];
+                $system_type = System::TYPE_USER_ABOUT_ME_INFO;
+                break;
             case System::COMMAND_GET_USER_INFO:
                 $user = $config::getUserClass();
                 $user = $user::findOne($data[User::CONTAINER]['id'] ?? 0);

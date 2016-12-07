@@ -125,6 +125,7 @@ socketChat.onMessageListRender  //called if render message list with "message_li
 socketChat.onUserConnect        //called if user connect to chat with "user" in parameter
 socketChat.onUserDisconnect     //called if user disconnect from chat with "user" in parameter
 socketChat.onUserRemoved        //called if user removed from chat with "user" in parameter
+socketChat.onAboutMeInfo        //about you info 
 socketChat.onUserInfo           //called if received user info with "user" in parameter
 socketChat.onUserList           //called if user list received with "user_list" in parameter
 socketChat.onUserTypingStart    //called if user start typing with "user_id" in parameter

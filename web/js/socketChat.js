@@ -43,7 +43,9 @@ var socketChat = {
     SYSTEM_TYPE_USER_DISCONNECTED: '',
     SYSTEM_TYPE_USER_REMOVED: '',
     SYSTEM_TYPE_USER_INFO: '',
+    SYSTEM_TYPE_USER_ABOUT_ME_INFO: '',
     SYSTEM_TYPE_USER_HISTORY: '',
+    SYSTEM_COMMAND_GET_INFO_ABOUT_ME: '',
 
     eventUserTypingTimers: [],
     waitingRoomTimer: null,
@@ -77,6 +79,7 @@ var socketChat = {
         socketChat.socket.onopen = function () {
             socketChat.is_connect = true;
             socketChat.sendQueueCheck();
+            socketChat.whoIm();
             socketChat.getUserList();
             console.log("Сonnected");
             socketChat.onConnect();
@@ -184,6 +187,8 @@ var socketChat = {
     },
     onDisconnect: function () {
     },
+    onAboutMeInfo: function (user) {
+    },
     onUserInfo: function (user) {
     },
     onUserConnect: function (user) {
@@ -204,6 +209,11 @@ var socketChat = {
     onUserTypingStart: function (user_id) {
     },
     onUserTypingEnd: function (user_id) {
+    },
+    whoIm: function () {
+        socketChat.sendSystem(
+            socketChat.SYSTEM_COMMAND_GET_INFO_ABOUT_ME
+        );
     },
     getUserInfo: function (user_id) {
         socketChat.sendSystem(
@@ -246,6 +256,9 @@ var socketChat = {
                 break;
             case socketChat.SYSTEM_TYPE_USER_HISTORY:
                 socketChat.onMessageListRender(system.data);
+                break;
+            case socketChat.SYSTEM_TYPE_USER_ABOUT_ME_INFO:
+                socketChat.onAboutMeInfo(system.user);
                 break;
         }
     },
