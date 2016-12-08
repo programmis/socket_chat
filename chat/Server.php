@@ -43,6 +43,10 @@ class Server
     public static $server_host = '127.0.0.1';
     /** @var string $connection_type */
     public static $connection_type = 'ws';
+    /** @var string $wss_local_cert */
+    public static $wss_local_cert = '';
+    /** @var string $wss_local_pk */
+    public static $wss_local_pk = '';
 
     /** @var StreamSelectLoop */
     protected $loop;
@@ -127,7 +131,7 @@ class Server
         $this->initSecurity();
 
         $this->loop   = Factory::create();
-        $this->socket = new \React\Socket\Server($this->loop);
+        $this->socket = new \chat\libs\Server($this->loop);
         $this->socket->on('connection', function (Connection $conn) {
             $security = self::$security;
 
@@ -167,7 +171,14 @@ class Server
 
             return true;
         });
-        $this->socket->listen(self::$port, self::$listen_host);
+        $wss = [];
+        if (self::$wss_local_cert) {
+            $wss['local_cert'] = self::$wss_local_cert;
+        }
+        if (self::$wss_local_pk) {
+            $wss['local_pk'] = self::$wss_local_pk;
+        }
+        $this->socket->listen(self::$port, self::$listen_host, $wss);
         self::$instance = $this;
     }
 
