@@ -49,13 +49,13 @@ class Server extends \React\Socket\Server
             }
             if (isset($wss['local_pk'])) {
                 stream_context_set_option($context, 'ssl', 'local_pk', $wss['local_pk']);
-                $server::log('connect local primary key ' . $wss['local_cert']);
+                $server::log('connect local primary key ' . $wss['local_pk']);
             }
             stream_context_set_option($context, 'ssl', 'allow_self_signed', true);
             stream_context_set_option($context, 'ssl', 'verify_peer', false);
         }
         $this->master = @stream_socket_server(
-            "tcp://$host:$port",
+            ($wss ? "ssl" : "tcp") . "://$host:$port",
             $errno,
             $errstr,
             STREAM_SERVER_BIND | STREAM_SERVER_LISTEN,
