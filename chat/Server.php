@@ -172,13 +172,15 @@ class Server
             return true;
         });
         $wss = [];
-        if (self::$wss_local_cert) {
-            $wss['local_cert'] = self::$wss_local_cert;
+        if (self::$connection_type == 'wss') {
+            if (self::$wss_local_cert) {
+                $wss['local_cert'] = self::$wss_local_cert;
+            }
+            if (self::$wss_local_pk) {
+                $wss['local_pk'] = self::$wss_local_pk;
+            }
         }
-        if (self::$wss_local_pk) {
-            $wss['local_pk'] = self::$wss_local_pk;
-        }
-        $this->socket->listen(self::$port, self::$listen_host, $wss);
+        $this->socket->listen(self::$port, self::$listen_host, $wss, $this);
         self::$instance = $this;
     }
 

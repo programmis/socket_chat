@@ -33,7 +33,7 @@ class Server extends \React\Socket\Server
     }
 
     /** @inheritdoc */
-    public function listen($port, $host = '127.0.0.1', $wss = [])
+    public function listen($port, $host = '127.0.0.1', $wss = [], \chat\Server $server = null)
     {
         if (strpos($host, ':') !== false) {
             // enclose IPv6 addresses in square brackets before appending port
@@ -45,9 +45,11 @@ class Server extends \React\Socket\Server
             $context = stream_context_create();
             if (isset($wss['local_cert'])) {
                 stream_context_set_option($context, 'ssl', 'local_cert', $wss['local_cert']);
+                $server::log('connect local certificate ' . $wss['local_cert']);
             }
             if (isset($wss['local_pk'])) {
                 stream_context_set_option($context, 'ssl', 'local_pk', $wss['local_pk']);
+                $server::log('connect local primary key ' . $wss['local_cert']);
             }
             stream_context_set_option($context, 'ssl', 'allow_self_signed', true);
             stream_context_set_option($context, 'ssl', 'verify_peer', false);
