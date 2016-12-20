@@ -8,6 +8,7 @@
 
 namespace chat\libs;
 
+use Psr\Log\LogLevel;
 use React\EventLoop\LoopInterface;
 use React\Socket\Connection;
 use React\Socket\ConnectionException;
@@ -44,23 +45,33 @@ class Server extends \React\Socket\Server
         if ($wss) {
             $context = stream_context_create();
             if (isset($wss['local_cert'])) {
-                stream_context_set_option($context, 'ssl', 'local_cert', $wss['local_cert']);
-                $server::log('connect local certificate ' . $wss['local_cert']);
+                if (!is_file($wss['local_cert'])) {
+                    $server::log('local certificate ' . $wss['local_cert'] . ' is not found!', LogLevel::ERROR);
+                } else {
+                    stream_context_set_option($context, 'ssl', 'local_cert', $wss['local_cert']);
+                    $server::log('connect local certificate ' . $wss['local_cert']);
+                }
             }
             if (isset($wss['local_pk'])) {
-                stream_context_set_option($context, 'ssl', 'local_pk', $wss['local_pk']);
-                $server::log('connect local primary key ' . $wss['local_pk']);
+                if (!is_file($wss['local_pk'])) {
+                    $server::log('primary key ' . $wss['local_pk'] . ' is not found!', LogLevel::ERROR);
+                } else {
+                    stream_context_set_option($context, 'ssl', 'local_pk', $wss['local_pk']);
+                    $server::log('connect local primary key ' . $wss['local_pk']);
+                }
             }
             stream_context_set_option($context, 'ssl', 'allow_self_signed', true);
             stream_context_set_option($context, 'ssl', 'verify_peer', false);
+            $this->master = @stream_socket_server(
+                "ssl://$host:$port",
+                $errno,
+                $errstr,
+                STREAM_SERVER_BIND | STREAM_SERVER_LISTEN,
+                $context
+            );
+        } else {
+            $this->master = @stream_socket_server("tcp://$host:$port", $errno, $errstr);
         }
-        $this->master = @stream_socket_server(
-            ($wss ? "ssl" : "tcp") . "://$host:$port",
-            $errno,
-            $errstr,
-            STREAM_SERVER_BIND | STREAM_SERVER_LISTEN,
-            $context
-        );
         if (false === $this->master) {
             $message = "Could not bind to tcp://$host:$port: $errstr";
             throw new ConnectionException($message, $errno);
