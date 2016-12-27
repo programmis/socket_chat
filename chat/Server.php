@@ -37,6 +37,8 @@ class Server
     public static $security;
     /** @var int $port */
     public static $port = 1337;
+    /** @var int $proxy_port */
+    public static $proxy_port = 0;
     /** @var string $listen_host */
     public static $listen_host = '0.0.0.0';
     /** @var string $server_host */
@@ -272,6 +274,7 @@ class Server
         $system  = $config::getSystemClass();
         $event   = $config::getEventClass();
         $user    = $config::getUserClass();
+        $port    = static::$proxy_port ? static::$proxy_port : static::$port;
 
         $default_room                       = $chat::DEFAULT_ROOM;
         $event_container                    = $event::CONTAINER;
@@ -294,7 +297,7 @@ class Server
         $system_type_user_history           = $system::TYPE_USER_HISTORY;
         $system_type_user_info              = $system::TYPE_USER_INFO;
         $system_type_user_about_me_info     = $system::TYPE_USER_ABOUT_ME_INFO;
-        $socket_url                         = static::$server_host . ':' . static::$port;
+        $socket_url                         = static::$server_host . ':' . $port;
         $connection_type                    = static::$connection_type;
 
         $js = <<<JS

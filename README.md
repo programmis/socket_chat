@@ -132,6 +132,35 @@ socketChat.onUserTypingStart    //called if user start typing with "user_id" in 
 socketChat.onUserTypingEnd      //called if user end typing with "user_id" in parameter
 ```
 
+_For nginx ssl encrypt_
+```php
+Server::$port = 1337;
+Server::$proxy_port = 1338;
+
+server {
+    server_name localhost _;
+    listen 1338 ssl;
+    proxy_connect_timeout       600;
+    proxy_send_timeout          600;
+    proxy_read_timeout          600;
+    send_timeout                600;
+
+    ssl_certificate /etc/nginx/ssl/server.crt;
+    ssl_certificate_key /etc/nginx/ssl/server.key;
+
+    root /home/project.ru/web;
+    location / {
+        proxy_pass http://127.0.0.1:1337;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
+```
+
+_How to enable another config param see example_
+[how to connect this chat to YII2 framework](https://github.com/programmis/yii2-socket-chat)
+
 **For example see index.php and socketChatDemo.js files**
 
 _Sorry for my english_
