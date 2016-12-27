@@ -136,6 +136,7 @@ _For nginx ssl encrypt_
 ```php
 Server::$port = 1337;
 Server::$proxy_port = 1338;
+Server::$proxy_connection_type = 'wss';
 
 server {
     server_name localhost _;

@@ -45,6 +45,8 @@ class Server
     public static $server_host = '127.0.0.1';
     /** @var string $connection_type */
     public static $connection_type = 'ws';
+    /** @var string $proxy_connection_type */
+    public static $proxy_connection_type = '';
     /** @var string $wss_local_cert */
     public static $wss_local_cert = '';
     /** @var string $wss_local_pk */
@@ -298,7 +300,8 @@ class Server
         $system_type_user_info              = $system::TYPE_USER_INFO;
         $system_type_user_about_me_info     = $system::TYPE_USER_ABOUT_ME_INFO;
         $socket_url                         = static::$server_host . ':' . $port;
-        $connection_type                    = static::$connection_type;
+        $connection_type                    = static::$proxy_connection_type ?
+            static::$proxy_connection_type : static::$connection_type;
 
         $js = <<<JS
                 socketChat.DEFAULT_ROOM = "$default_room";
