@@ -27,16 +27,18 @@ class System implements SystemIterface
             'system' => $type,
             'data'   => $data
         ];
-        switch ($type) {
-            case self::TYPE_USER_INFO:
-            case self::TYPE_USER_ABOUT_ME_INFO:
-            case self::TYPE_USER_REMOVED:
-            case self::TYPE_USER_CONNECTED:
-            case self::TYPE_USER_DISCONNECTED:
-                $message = array_merge($message, [
-                    User::CONTAINER => $user->getInfo()
-                ]);
-                break;
+        if ($user) {
+            switch ($type) {
+                case self::TYPE_USER_INFO:
+                case self::TYPE_USER_ABOUT_ME_INFO:
+                case self::TYPE_USER_REMOVED:
+                case self::TYPE_USER_CONNECTED:
+                case self::TYPE_USER_DISCONNECTED:
+                    $message = array_merge($message, [
+                        User::CONTAINER => $user->getInfo()
+                    ]);
+                    break;
+            }
         }
 
         return $message;
