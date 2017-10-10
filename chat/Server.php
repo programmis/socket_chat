@@ -237,7 +237,8 @@ class Server
         }
         $config       = self::$config;
         $messageClass = $config::getMessageClass();
-        $messageClass::beforeSend($sender->id, $recipient->id, $message_array);
+        $users_info   = self::getInstance()->chat->roomUsers[$room];
+        $messageClass::beforeSend($sender->id, $recipient->id, $message_array, $users_info);
         $conn = self::$instance->chat->getUserConnection($room, $recipient->id);
         if (!$conn || !$conn->isWritable()) {
             self::log("Can't send message recipient is offline", LogLevel::ERROR);
@@ -247,7 +248,7 @@ class Server
         $security     = self::$security;
         $message_json = json_encode($message_array);
         $conn->write($security::encode($message_json));
-        $messageClass::afterSend($sender->id, $recipient->id, $message_array);
+        $messageClass::afterSend($sender->id, $recipient->id, $message_array, $users_info);
         self::log('Send message: ' . $message_json);
     }
 

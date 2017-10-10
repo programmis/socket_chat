@@ -35,13 +35,15 @@ interface MessageInterface
      * @param int $sender_id
      * @param int $recipient_id
      * @param array $message_array
+     * @param array $users_info
      */
-    public static function beforeSend($sender_id, $recipient_id, &$message_array);
+    public static function beforeSend($sender_id, $recipient_id, &$message_array, $users_info);
 
     /**
      * @param int $sender_id
      * @param int $recipient_id
      * @param array $message_array
+     * @param array $users_info
      */
-    public static function afterSend($sender_id, $recipient_id, $message_array);
+    public static function afterSend($sender_id, $recipient_id, $message_array, $users_info);
 }
